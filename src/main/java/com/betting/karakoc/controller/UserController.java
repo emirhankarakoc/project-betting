@@ -1,0 +1,82 @@
+package com.betting.karakoc.controller;
+
+
+import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
+import com.betting.karakoc.model.dtos.UserBetEntityDTO;
+import com.betting.karakoc.model.dtos.UserBetRoundEntityDTO;
+import com.betting.karakoc.model.dtos.UserEntityDTO;
+import com.betting.karakoc.model.enums.Selection;
+import com.betting.karakoc.model.real.BetRoundEntity;
+
+
+import com.betting.karakoc.service.repo.MailService;
+import com.betting.karakoc.service.repo.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/bet/user")
+@AllArgsConstructor
+@Tag(name = "User Controller")
+
+public class UserController {
+    private final UserService service;
+    private final MailService mailService;
+
+
+    @Operation(
+            summary = "brings betrounds which status is ENDED")
+    @GetMapping("/endedBetRounds")
+    public List<BetRoundEntityDTO> getEndedBetRounds() {
+        return service.getEndedBetRounds();
+    }
+    @Operation(
+            summary = "brings betrounds which status is PLANNED")
+
+    @GetMapping("/plannedBetRounds")
+    public List<BetRoundEntityDTO> getPlannedBetRounds() {
+        return service.getPlannedBetRounds();
+    }
+    @Operation(
+            summary = "creating an userbetround for given betroundId")
+
+    @PostMapping("/createUserBetRound")
+    public UserBetRoundEntityDTO createUserBetRound(@RequestParam Long betRoundId, @RequestParam String token){
+        return service.createUserBetRound(betRoundId,token);
+    }
+
+    @Operation(
+            summary = "create a bet for given gameId and given userBetRoundId")
+    @PostMapping("/createBet")
+    public UserBetEntityDTO creteUserBet(@RequestParam Long userBetRoundId, @RequestParam Long gameId,@RequestParam Selection selection,@RequestParam String token){
+        return service.creteUserBet(userBetRoundId, gameId, selection,token);
+    }/*
+    @Operation(
+            summary = "brings a specific betround, include all games.")
+    @GetMapping("/getBetRound")
+    public BetRoundEntityDTO getBetroundById(@RequestParam Long id){
+        return service.getBetroundById(id);
+
+        //bu metod aslinda userlarin kullanimina acik degil. ben emirhan test ederken bunu ekledim. geliyo mu diye, silmedim dursun belki ilerde lazim olur.
+        //kullanicilarin CREATED,PLANNED ve ENDED betroundlara ayri ayri erisimi var. getbetround da olsa , olmaz.
+        // o yuzden yoruma alindi.
+    }*/
+
+    @Operation(
+            summary = "changing password")
+    @PostMapping("/changePassword")
+    public UserEntityDTO changePassword(String username, String password, String newPassword){return service.changePassword(username,password,newPassword);}
+
+
+    @Operation(
+            summary = "sends a new password to users mail adress")
+    @GetMapping("/forgotPassword")
+    public String forgotPassword(@RequestParam String username){return mailService.forgotPassword(username);}
+
+}
