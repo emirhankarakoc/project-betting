@@ -45,7 +45,6 @@ public class UserController {
 
     @GetMapping("/plannedBetRounds")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
     public List<BetRoundEntityDTO> getPlannedBetRounds() {
         return service.getPlannedBetRounds();
     }

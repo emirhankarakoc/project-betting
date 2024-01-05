@@ -24,7 +24,17 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         url = "https://github.com/emirhankarakoc/betting"
                 ),
                 termsOfService = "https://github.com/emirhankarakoc/betting"
-        )
+        ),
+        servers = {
+                @Server(
+                        description = "local",
+                        url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "prod",
+                        url = "https://bettting.ey.r.appspot.com/"
+                )
+        }
 
 )
 

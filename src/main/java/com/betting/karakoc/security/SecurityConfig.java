@@ -44,6 +44,12 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers(HttpMethod.GET)
                 .permitAll()
+                .requestMatchers(HttpMethod.POST)
+                .permitAll()
+                .requestMatchers(HttpMethod.PUT)
+                .permitAll()
+                .requestMatchers(HttpMethod.DELETE)
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -52,4 +58,5 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 }
+
 
