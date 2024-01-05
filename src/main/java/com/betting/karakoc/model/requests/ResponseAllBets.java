@@ -12,7 +12,6 @@ import java.util.List;
 public class ResponseAllBets {
     String firstname;
     String username;
-
     String betRoundTitle;
     String firstTeam;
     String scoreFirstTeam;
@@ -20,6 +19,7 @@ public class ResponseAllBets {
     String scoreSecondTeam;
     Selection selection;
 
+    //a
 
 
 }
