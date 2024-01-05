@@ -24,6 +24,8 @@ import java.util.List;
 @RequestMapping("/bet/user")
 @AllArgsConstructor
 @Tag(name = "User Controller")
+@CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
 
 public class UserController {
     private final UserService service;
@@ -33,6 +35,8 @@ public class UserController {
     @Operation(
             summary = "brings betrounds which status is ENDED")
     @GetMapping("/endedBetRounds")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public List<BetRoundEntityDTO> getEndedBetRounds() {
         return service.getEndedBetRounds();
     }
@@ -40,6 +44,8 @@ public class UserController {
             summary = "brings betrounds which status is PLANNED")
 
     @GetMapping("/plannedBetRounds")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public List<BetRoundEntityDTO> getPlannedBetRounds() {
         return service.getPlannedBetRounds();
     }
@@ -47,6 +53,8 @@ public class UserController {
             summary = "creating an userbetround for given betroundId")
 
     @PostMapping("/createUserBetRound")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public UserBetRoundEntityDTO createUserBetRound(@RequestParam Long betRoundId, @RequestParam String token){
         return service.createUserBetRound(betRoundId,token);
     }
@@ -54,6 +62,8 @@ public class UserController {
     @Operation(
             summary = "create a bet for given gameId and given userBetRoundId")
     @PostMapping("/createBet")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public UserBetEntityDTO creteUserBet(@RequestParam Long userBetRoundId, @RequestParam Long gameId,@RequestParam Selection selection,@RequestParam String token){
         return service.creteUserBet(userBetRoundId, gameId, selection,token);
     }/*
@@ -71,12 +81,16 @@ public class UserController {
     @Operation(
             summary = "changing password")
     @PostMapping("/changePassword")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public UserEntityDTO changePassword(String username, String password, String newPassword){return service.changePassword(username,password,newPassword);}
 
 
     @Operation(
             summary = "sends a new password to users mail adress")
     @GetMapping("/forgotPassword")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public String forgotPassword(@RequestParam String username){return mailService.forgotPassword(username);}
 
 }

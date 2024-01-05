@@ -9,6 +9,7 @@ import com.betting.karakoc.repository.UserEntityRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequestMapping("/bet/account")
 @AllArgsConstructor
 @Tag(name = "Account Controller")
+@CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
 public class AccountController {
     private final UserEntityRepository repository;
@@ -28,6 +30,8 @@ public class AccountController {
     @Operation(
             summary = "register to system.")
     @PostMapping("/register")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public UserEntityDTO register (CreateUserRequest request){
         String username = request.getUsername();
         int specialCharCount=0;
@@ -59,6 +63,8 @@ public class AccountController {
     @Operation(
             summary = "login to system.")
     @PostMapping("/login")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public String login (String username, String password) {
         Optional<UserEntity> user = repository.findByUsername(username);
         if (user.isEmpty()) throw new GeneralException("Wrong username or password.",400);

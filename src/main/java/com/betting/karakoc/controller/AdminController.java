@@ -23,6 +23,7 @@ import java.util.List;
 @RequestMapping("/bet/admin")
 @AllArgsConstructor
 @Tag(name = "Admin Controller")
+@CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
 public class AdminController {
     private final AdminService service;
@@ -30,6 +31,8 @@ public class AdminController {
     @Operation(
             summary = "brings all user entities with pages. [0,x]")
     @GetMapping("/getAllUsers")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public Page<UserEntity> getAll(@RequestParam String token,@RequestParam int pageNumber){
         return service.getAllUsers(token,pageNumber);
     }
@@ -37,6 +40,8 @@ public class AdminController {
     @Operation(
             summary = "creating a new betround")
     @PostMapping("/postBetRound")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public BetRoundEntityDTO postBetRound(@RequestBody CreateBetRoundRequest request, @RequestParam String token){
         return service.createBetRound(request,token);
     }
@@ -46,6 +51,8 @@ public class AdminController {
             summary = "brings all userbetrounds for given betrounds id")
 
     @GetMapping("/allBetsByGame")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public List<UserBetEntityDTO> getAllBetsByGame(@RequestParam Long betRoundId){
         return betSummaryService.getAllBetsByGame(betRoundId);
     }
@@ -53,6 +60,8 @@ public class AdminController {
     @Operation(
             summary = "brings a text like\nCONGRATS x, YOU WIN y GAME")
     @PostMapping("/summaryForAnyUser")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public String summaryBets(@RequestParam Long userBetRoundId, @RequestParam String token){
         return betSummaryService.summaryBets(userBetRoundId,token);
     }
@@ -61,6 +70,9 @@ public class AdminController {
             summary = "creating a game for given betround")
 
     @PostMapping("/createGame")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
+
     public GameEntityDTO createGame(@RequestParam Long betroundId ,@RequestBody CreateGameRequest request, @RequestParam String token){
         return service.createGame(betroundId,request,token);
     }
@@ -69,6 +81,8 @@ public class AdminController {
             summary = "brings all CREATED betrounds, after adding 13 game, betrounds status automaticly changes to PLANNED\nso this method just gives \"NOT FINISHED YET betrounds\"")
 
     @GetMapping("/getCreatedBetRounds")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public List<BetRoundEntityDTO> getCreatedBetRounds(@RequestParam String token){
         return service.getCreatedBetRounds(token);
     }
@@ -76,6 +90,9 @@ public class AdminController {
     @Operation(
             summary = "change the match score with gameId")
     @PutMapping("/putGame")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
+
     public GameEntityDTO putGame(@RequestBody PutGameRequest request, @RequestParam String token){
         return service.putGame(request,token);
     }
@@ -84,6 +101,8 @@ public class AdminController {
     @Operation(
             summary = "after all bets, finishes the betrounds manually.")
     @PutMapping("/endBetRound")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public BetRoundEntityDTO endBetRound(@RequestParam Long betroundId, @RequestParam String token){
         return service.endBetRound(betroundId,token);
     }
@@ -91,6 +110,8 @@ public class AdminController {
     @Operation(
             summary = "sends e-mail to all users participating in this betround")
     @GetMapping("/sendMailToParticipants")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+
     public String mailSender(@RequestParam Long betroundId,@RequestParam String token){
         return mailService.mailSender2(token,betroundId);
     }
