@@ -66,38 +66,11 @@ public class BetSummaryManager implements BetSummaryService {
         List<GameEntity> gamesList = tokendenGelenUserinOynadigiUserBetRoundunBetRoundu.get().getGames();
         for ( int i = 0;i<13;i++){
              sectigi = tokendenGelenKullanicininOynadigiUserBetRounddakiBetler.get(i);
-            if (sectigi.getSelection()== Selection.FIRST && gamesList.get(i).getScoreFirstTeam()>gamesList.get(i).getScoreSecondTeam()){
-                sectigi.setIsGuessCorrect(true);
-                correctsCount++;
-            }
-            else if (sectigi.getSelection()== Selection.SECOND && gamesList.get(i).getScoreFirstTeam()<gamesList.get(i).getScoreSecondTeam()){
-                sectigi.setIsGuessCorrect(true);
-                correctsCount++;
-            }
-            else if (sectigi.getSelection()== Selection.DRAW && gamesList.get(i).getScoreFirstTeam()==gamesList.get(i).getScoreSecondTeam()){
-                sectigi.setIsGuessCorrect(true);
-                correctsCount++;
-            }
-            else sectigi.setIsGuessCorrect(false);
-
             if(sectigi.getSelection()== Selection.FIRST && gamesList.get(i).getScoreFirstTeam()>gamesList.get(i).getScoreSecondTeam()||sectigi.getSelection()== Selection.SECOND && gamesList.get(i).getScoreFirstTeam()<gamesList.get(i).getScoreSecondTeam()||sectigi.getSelection()== Selection.DRAW && gamesList.get(i).getScoreFirstTeam()==gamesList.get(i).getScoreSecondTeam()){
                 sectigi.setIsGuessCorrect(true);
                 correctsCount++;
             }
             else sectigi.setIsGuessCorrect(false);
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
         userbetround.get().setCorrectGuessedMatchCount(correctsCount);
         userBetRepository.save(sectigi);
