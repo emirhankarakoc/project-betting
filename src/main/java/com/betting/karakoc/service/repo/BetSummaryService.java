@@ -8,6 +8,6 @@ import com.betting.karakoc.model.requests.ResponseAllBets;
 import java.util.List;
 
 public interface BetSummaryService {
-    List<UserBetEntityDTO> getAllBetsByGame(Long betRoundId);
+    List<UserBetEntityDTO> getAllBetsByGame(long betRoundId);
     String summaryBets(Long betRoundId, String token);
 }

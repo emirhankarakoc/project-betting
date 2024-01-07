@@ -39,12 +39,29 @@ public class AdminController {
 
     @Operation(
             summary = "creating a new betround")
-    @PostMapping("/postBetRound")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
+
+
+
+
+
+
+
+    @PostMapping("/postBetRound")
     public BetRoundEntityDTO postBetRound(@RequestBody CreateBetRoundRequest request, @RequestParam String token){
-        return service.createBetRound(request,token);
+        return service.createBetRound(request,token); // bir html işlemi
     }
+
+
+
+
+
+
+
+
+
+
     private final BetSummaryService betSummaryService;
 
     @Operation(
@@ -52,7 +69,6 @@ public class AdminController {
 
     @GetMapping("/allBetsByGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
     public List<UserBetEntityDTO> getAllBetsByGame(@RequestParam Long betRoundId){
         return betSummaryService.getAllBetsByGame(betRoundId);
     }

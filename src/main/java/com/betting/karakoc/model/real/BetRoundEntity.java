@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class BetRoundEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
     private LocalDate createdDateTime;
@@ -22,6 +22,7 @@ public class BetRoundEntity {
     @Enumerated
     private BetStatus betStatus;
     @OneToMany
+    @JoinColumn(name = "betroundId")
     private List<GameEntity> games;
 
 }

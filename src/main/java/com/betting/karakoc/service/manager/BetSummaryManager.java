@@ -29,10 +29,9 @@ public class BetSummaryManager implements BetSummaryService {
 
 
 
-    public List<UserBetEntityDTO> getAllBetsByGame(Long betRoundId){
+    public List<UserBetEntityDTO> getAllBetsByGame(long betRoundId){
         List<UserBetEntity> usersBetList = userBetRepository.findAll();
-
-        List<UserBetEntityDTO> responseAllBets =null;
+        List<UserBetEntityDTO> responseAllBets = new ArrayList<>();
         for (UserBetEntity bet: usersBetList) {
             if ((bet.getUserBetRoundId())==betRoundId){
                 UserBetEntityDTO dto = new UserBetEntityDTO();
@@ -50,8 +49,8 @@ public class BetSummaryManager implements BetSummaryService {
     public String summaryBets(Long userBetRoundId,String token){
 
         Optional<UserEntity> user = userRepository.findByToken(token);
-        Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findByIdAndUserEntityId(userBetRoundId,user.get().getId());
         if (user.isEmpty()) throw new GeneralException("Invalid token.",400);
+        Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findByIdAndUserEntityId(userBetRoundId,user.get().getId());
         if (userbetround.isEmpty()) throw new GeneralException("Invalid user bet round.",400);
         if (!(userbetround.get().getUserEntityId().equals(user.get().getId()))) throw new GeneralException("You didn't played this round.",400);
         Optional<BetRoundEntity> tokendenGelenUserinOynadigiUserBetRoundunBetRoundu = betRepository.findById(userbetround.get().getBetRoundEntityId());
@@ -80,6 +79,25 @@ public class BetSummaryManager implements BetSummaryService {
                 correctsCount++;
             }
             else sectigi.setIsGuessCorrect(false);
+
+            if(sectigi.getSelection()== Selection.FIRST && gamesList.get(i).getScoreFirstTeam()>gamesList.get(i).getScoreSecondTeam()||sectigi.getSelection()== Selection.SECOND && gamesList.get(i).getScoreFirstTeam()<gamesList.get(i).getScoreSecondTeam()||sectigi.getSelection()== Selection.DRAW && gamesList.get(i).getScoreFirstTeam()==gamesList.get(i).getScoreSecondTeam()){
+                sectigi.setIsGuessCorrect(true);
+                correctsCount++;
+            }
+            else sectigi.setIsGuessCorrect(false);
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
         userbetround.get().setCorrectGuessedMatchCount(correctsCount);
         userBetRepository.save(sectigi);

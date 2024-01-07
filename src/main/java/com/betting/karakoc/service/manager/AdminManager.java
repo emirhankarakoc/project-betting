@@ -44,6 +44,7 @@ public class AdminManager implements AdminService {
 
     @Transactional
     public GameEntityDTO createGame(Long betroundId,CreateGameRequest request,String token){
+
         Optional<UserEntity> user = userRepository.findByToken(token);
         if (user.isEmpty()) throw new GeneralException("Access denied.",401);
         if (user.get().getRole()!= UserRole.ROLE_ADMIN) throw new GeneralException("Forbidden.",403);

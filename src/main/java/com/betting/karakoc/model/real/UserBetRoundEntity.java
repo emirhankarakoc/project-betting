@@ -10,13 +10,14 @@ import java.util.List;
 public class UserBetRoundEntity {
     //kupon
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate createdDateTime;
     private LocalDate updatedDateTime;
     private String userEntityId;
     private Long betRoundEntityId;
     @OneToMany
+    @JoinColumn(name = "userBetRoundId")
     private List<UserBetEntity> userBetList;
     private int correctGuessedMatchCount;
 
