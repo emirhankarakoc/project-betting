@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
+import static com.betting.karakoc.model.real.UserEntity.isUserEmpty;
+import static com.betting.karakoc.model.real.UserEntity.isUserIsAdmin;
 
 
 @Service
@@ -35,8 +39,9 @@ public class MailSenderManager implements MailService {
         simpleMailMessage.setFrom("shopifyemirhan6@gmail.com");
         simpleMailMessage.setSubject("Spor Toto Sonuç");
 
-        UserEntity user = userRepository.findByToken(token).get();
-        if (!(user.getRole()== UserRole.ROLE_ADMIN)) throw new GeneralException("Forbidden.",403);
+        Optional<UserEntity> user = userRepository.findByToken(token);
+        isUserEmpty(user);
+        isUserIsAdmin(user);
         //adminkontrolu
         String response="";
         List<UserBetRoundEntity> kapatilacakBetRoundlar = new ArrayList<>();
@@ -77,18 +82,15 @@ public class MailSenderManager implements MailService {
             }
         }
 
-
-
-
-
         return mailAdamlar.size() +" tane mail gonderildi.";
 
     }
 
     public String forgotPassword(String username){
         Optional<UserEntity> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) throw new GeneralException("User not found.",404);
-        user.get().setPassword("123456789sportoto");
+        isUserEmpty(user);
+        Random random = new Random();
+        user.get().setPassword(""+ random.nextDouble(9999999));
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("shopifyemirhan6@gmail.com");
         simpleMailMessage.setSubject("Şifre yenileme işlemi");

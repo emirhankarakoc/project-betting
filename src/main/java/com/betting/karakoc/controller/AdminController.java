@@ -3,7 +3,6 @@ package com.betting.karakoc.controller;
 import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.model.dtos.GameEntityDTO;
 import com.betting.karakoc.model.dtos.UserBetEntityDTO;
-import com.betting.karakoc.model.real.BetRoundEntity;
 import com.betting.karakoc.model.real.UserEntity;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import com.betting.karakoc.model.requests.CreateGameRequest;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

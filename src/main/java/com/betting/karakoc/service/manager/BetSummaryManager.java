@@ -1,10 +1,7 @@
 package com.betting.karakoc.service.manager;
 
-import com.betting.karakoc.exceptions.GeneralException;
 import com.betting.karakoc.model.dtos.UserBetEntityDTO;
-import com.betting.karakoc.model.enums.BetStatus;
 import com.betting.karakoc.model.enums.Selection;
-import com.betting.karakoc.model.enums.UserRole;
 import com.betting.karakoc.model.real.*;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.service.repo.BetSummaryService;
@@ -13,8 +10,13 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+
+import static com.betting.karakoc.model.real.BetRoundEntity.*;
+import static com.betting.karakoc.model.real.UserBetEntity.userBetToDto;
+import static com.betting.karakoc.model.real.UserBetEntity.userBetValidation;
+import static com.betting.karakoc.model.real.UserBetRoundEntity.isUserBetRoundEmptyAndisUserPlayedForThisBetround;
+import static com.betting.karakoc.model.real.UserEntity.isUserEmpty;
 
 @Data
 @Service
@@ -34,13 +36,7 @@ public class BetSummaryManager implements BetSummaryService {
         List<UserBetEntityDTO> responseAllBets = new ArrayList<>();
         for (UserBetEntity bet: usersBetList) {
             if ((bet.getUserBetRoundId())==betRoundId){
-                UserBetEntityDTO dto = new UserBetEntityDTO();
-                dto.setId(bet.getId());
-                dto.setSelection(bet.getSelection());
-                dto.setGameEntityId(bet.getGameEntityId());
-                dto.setUserBetRoundId(bet.getUserBetRoundId());
-                dto.setIsGuessCorrect(bet.getIsGuessCorrect());
-                responseAllBets.add(dto);
+                responseAllBets.add(userBetToDto(bet));
             }
         }
         return responseAllBets;
@@ -49,17 +45,14 @@ public class BetSummaryManager implements BetSummaryService {
     public String summaryBets(Long userBetRoundId,String token){
 
         Optional<UserEntity> user = userRepository.findByToken(token);
-        if (user.isEmpty()) throw new GeneralException("Invalid token.",400);
+        isUserEmpty(user);
         Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findByIdAndUserEntityId(userBetRoundId,user.get().getId());
-        if (userbetround.isEmpty()) throw new GeneralException("Invalid user bet round.",400);
-        if (!(userbetround.get().getUserEntityId().equals(user.get().getId()))) throw new GeneralException("You didn't played this round.",400);
+        isUserBetRoundEmptyAndisUserPlayedForThisBetround(userbetround,user);
         Optional<BetRoundEntity> tokendenGelenUserinOynadigiUserBetRoundunBetRoundu = betRepository.findById(userbetround.get().getBetRoundEntityId());
-        if(tokendenGelenUserinOynadigiUserBetRoundunBetRoundu.isEmpty()) throw new GeneralException("An error occured in summaryBets method.",400);
-        if (tokendenGelenUserinOynadigiUserBetRoundunBetRoundu.get().getBetStatus()!=BetStatus.ENDED) throw new GeneralException("This betround is not finished yet.",400);
-        //eger ended degilse kontrol etme bile.
+        isBetRoundEmpty(tokendenGelenUserinOynadigiUserBetRoundunBetRoundu);
+        isBetroundEnded(tokendenGelenUserinOynadigiUserBetRoundunBetRoundu);
         List<UserBetEntity> tokendenGelenKullanicininOynadigiUserBetRounddakiBetler = userBetRepository.findAllByUserBetRoundId(userbetround.get().getId());
-        if (tokendenGelenKullanicininOynadigiUserBetRounddakiBetler.isEmpty()) throw new GeneralException("An error occured in summaryBets method.",400);
-        if (tokendenGelenKullanicininOynadigiUserBetRounddakiBetler.size()!=13) throw new GeneralException("You have to bet all games.",400);
+        userBetValidation(tokendenGelenKullanicininOynadigiUserBetRounddakiBetler);
         userbetround.get().setCorrectGuessedMatchCount(0);
         UserBetEntity sectigi = null;
         int correctsCount = 0;
