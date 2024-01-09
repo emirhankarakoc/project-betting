@@ -70,8 +70,8 @@ private final JavaMailSender mailSender;
             Optional<UserEntity> user = userRepository.findByToken(token);
             isUserEmpty(user);
             isTokenValid(user.get());
-            userBetRoundRepository.save(createUserbetRoundBuilder(betRoundEntityId,user.get()));
-            return userBetRoundToDto(createUserbetRoundBuilder(betRoundEntityId,user.get()));
+           UserBetRoundEntity userbet =  userBetRoundRepository.save(createUserbetRoundBuilder(betRoundEntityId,user.get()));
+            return userBetRoundToDto(userbet);
         }
 
 
@@ -109,7 +109,11 @@ private final JavaMailSender mailSender;
             userBetRoundRepository.save(betRound.get());
             //dtolama
             UserBetEntityDTO dto = userBetToDto(userBet);
-            dto.setOynayanTakimlar(""+game.get().getFirstTeam()+" VS "+game.get().getSecondTeam());
+            String oynayanTakimlar = "-";
+            for (int i = 0;i<game.get().getTeams().size();i++){
+                oynayanTakimlar+= game.get().getTeams().get(i).getName() + "-";
+            }
+            dto.setOynayanTakimlar(oynayanTakimlar);
             return dto;
 
 

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.betting.karakoc.model.real.BetRoundEntity.*;
+import static com.betting.karakoc.model.real.GameEntity.isTeamsSizeEqualsToParam;
 import static com.betting.karakoc.model.real.UserBetEntity.userBetToDto;
 import static com.betting.karakoc.model.real.UserBetEntity.userBetValidation;
 import static com.betting.karakoc.model.real.UserBetRoundEntity.isUserBetRoundEmptyAndisUserPlayedForThisBetround;
@@ -42,7 +43,7 @@ public class BetSummaryManager implements BetSummaryService {
         return responseAllBets;
     }
 
-    public String summaryBets(Long userBetRoundId,String token){
+    public String summaryBetsForTwoTeams(Long userBetRoundId,String token){
 
         Optional<UserEntity> user = userRepository.findByToken(token);
         isUserEmpty(user);
@@ -57,9 +58,10 @@ public class BetSummaryManager implements BetSummaryService {
         UserBetEntity sectigi = null;
         int correctsCount = 0;
         List<GameEntity> gamesList = tokendenGelenUserinOynadigiUserBetRoundunBetRoundu.get().getGames();
+        isTeamsSizeEqualsToParam(gamesList.size(),2);
         for ( int i = 0;i<13;i++){
              sectigi = tokendenGelenKullanicininOynadigiUserBetRounddakiBetler.get(i);
-            if(sectigi.getSelection()== Selection.FIRST && gamesList.get(i).getScoreFirstTeam()>gamesList.get(i).getScoreSecondTeam()||sectigi.getSelection()== Selection.SECOND && gamesList.get(i).getScoreFirstTeam()<gamesList.get(i).getScoreSecondTeam()||sectigi.getSelection()== Selection.DRAW && gamesList.get(i).getScoreFirstTeam()==gamesList.get(i).getScoreSecondTeam()){
+            if(sectigi.getSelection()== Selection.FIRST && gamesList.get(i).getTeams().get(0).getScore()>gamesList.get(i).getTeams().get(1).getScore() ||sectigi.getSelection()== Selection.SECOND && gamesList.get(i).getTeams().get(0).getScore()<gamesList.get(i).getTeams().get(1).getScore()||sectigi.getSelection()== Selection.DRAW && gamesList.get(i).getTeams().get(0).getScore()==gamesList.get(i).getTeams().get(1).getScore()){
                 sectigi.setIsGuessCorrect(true);
                 correctsCount++;
             }

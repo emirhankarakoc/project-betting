@@ -9,16 +9,15 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Entity
 @Data
 public class BetRoundEntity {
-    private static Optional<BetRoundEntity> betround;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private LocalDate createdDateTime;
     private LocalDate updatedDateTime;
@@ -67,7 +66,7 @@ public static BetRoundEntity createBetRoundBuilder(CreateBetRoundRequest request
     betRound.setCreatedDateTime(LocalDate.now());
     betRound.setUpdatedDateTime(LocalDate.now());
     betRound.setPlayDateTime(request.getPlayDateTime());
-    betRound.setGames(null);
+    betRound.setGames(new ArrayList<>());
     return betRound;
 }
 public static BetRoundEntityDTO betroundToDto(BetRoundEntity betRound){
@@ -79,6 +78,13 @@ public static BetRoundEntityDTO betroundToDto(BetRoundEntity betRound){
     dto.setUpdatedDateTime(betRound.getUpdatedDateTime());
     dto.setPlayDateTime(betRound.getPlayDateTime());
     dto.setGames(betRound.getGames());
+    for (int i = 0;i<betRound.getGames().size();i++){
+        for (int j = 0;j<betRound.getGames().get(i).getTeams().size();j++){
+            dto.getGames().get(i).setTeams(betRound.getGames().get(i).getTeams());
+
+    }
+    }
+
     return dto;
 }
 

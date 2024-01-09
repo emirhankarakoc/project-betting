@@ -70,7 +70,7 @@ public class MailSenderManager implements MailService {
             Optional<UserEntity> eklenecekUSer =  userRepository.findById(kapatilacakBetRoundlar.get(i).getUserEntityId());
 
 
-            response+=(betSummaryManager.summaryBets((kapatilacakBetRoundlar.get(i).getId()),eklenecekUSer.get().getToken())) + "\n";
+            response+=(betSummaryManager.summaryBetsForTwoTeams((kapatilacakBetRoundlar.get(i).getId()),eklenecekUSer.get().getToken())) + "\n";
             simpleMailMessage.setTo(eklenecekUSer.get().getUsername());
             simpleMailMessage.setText(response);
             try{

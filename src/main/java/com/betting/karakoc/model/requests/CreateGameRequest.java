@@ -3,8 +3,11 @@ package com.betting.karakoc.model.requests;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CreateGameRequest {
-    private String firstTeam;
-    private String secondTeam;
+  private List<String> teams;
+
+
 }

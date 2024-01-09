@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,5 +18,5 @@ public class BetRoundEntityDTO {
     private String title;
     private LocalDateTime playDateTime;
     private BetStatus status;
-    private List<GameEntity> games;
+    private List<GameEntity> games = new ArrayList<>();
 }

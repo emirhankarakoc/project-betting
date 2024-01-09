@@ -1,19 +1,17 @@
 package com.betting.karakoc.model.dtos;
 
 
-import com.betting.karakoc.model.real.GameEntity;
-import jakarta.persistence.Embedded;
+import com.betting.karakoc.model.real.Team;
+import jakarta.persistence.ElementCollection;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class GameEntityDTO {
 
     private Long id;
     private Long betroundId;
-    private String firstTeam;
-    private String secondTeam;
-    int scoreFirstTeam;
-    int scoreSecondTeam;
+    private List<Team> teams = new ArrayList<>();
 }

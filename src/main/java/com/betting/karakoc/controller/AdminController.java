@@ -6,7 +6,7 @@ import com.betting.karakoc.model.dtos.UserBetEntityDTO;
 import com.betting.karakoc.model.real.UserEntity;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import com.betting.karakoc.model.requests.CreateGameRequest;
-import com.betting.karakoc.model.requests.PutGameRequest;
+import com.betting.karakoc.model.requests.PutGameRequestWithTwoTeams;
 import com.betting.karakoc.service.repo.AdminService;
 import com.betting.karakoc.service.repo.BetSummaryService;
 import com.betting.karakoc.service.repo.MailService;
@@ -77,7 +77,7 @@ public class AdminController {
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
     public String summaryBets(@RequestParam Long userBetRoundId, @RequestParam String token){
-        return betSummaryService.summaryBets(userBetRoundId,token);
+        return betSummaryService.summaryBetsForTwoTeams(userBetRoundId,token);
     }
 
     @Operation(
@@ -87,8 +87,8 @@ public class AdminController {
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
 
-    public GameEntityDTO createGame(@RequestParam Long betroundId ,@RequestBody CreateGameRequest request, @RequestParam String token){
-        return service.createGame(betroundId,request,token);
+    public GameEntityDTO createGame(@RequestParam Long betroundId , @RequestBody CreateGameRequest request, @RequestParam int teamsSize, @RequestParam String token){
+        return service.createGame(betroundId,request,teamsSize,token);
     }
 
     @Operation(
@@ -107,7 +107,7 @@ public class AdminController {
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
 
-    public GameEntityDTO putGame(@RequestBody PutGameRequest request, @RequestParam String token){
+    public GameEntityDTO putGame(@RequestBody PutGameRequestWithTwoTeams request, @RequestParam String token){
         return service.putGame(request,token);
     }
 
