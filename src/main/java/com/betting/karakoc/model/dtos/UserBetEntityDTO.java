@@ -9,8 +9,7 @@ public class UserBetEntityDTO {
     private String id;
     private Long userBetRoundId;
     private Long gameEntityId;
-    private Selection selection;
+    private Long betTeamId;
     private Boolean isGuessCorrect;
-
     private String oynayanTakimlar;
 }

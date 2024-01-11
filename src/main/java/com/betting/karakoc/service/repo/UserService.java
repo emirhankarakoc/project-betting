@@ -13,8 +13,8 @@ import java.util.List;
 public interface UserService {
      List<BetRoundEntityDTO> getEndedBetRounds();
      List<BetRoundEntityDTO> getPlannedBetRounds();
-     UserBetRoundEntityDTO createUserBetRound(Long betRoundEntityId, String token);
-     UserBetEntityDTO creteUserBet(Long userBetRoundId, Long gameId, Selection selection, String token);
+     UserBetRoundEntityDTO createUserBetRound(Long betRoundEntityId);
+     UserBetEntityDTO creteUserBet(Long userBetRoundId, Long gameId, Long betTeamId);
      BetRoundEntityDTO getBetroundById(Long id);
      UserEntityDTO changePassword(String username, String password, String newPassword);
 

@@ -26,9 +26,9 @@ public class UserBetRoundEntity {
     private int correctGuessedMatchCount;
 
 
-    public static void isUserBetRoundEmptyAndisUserPlayedForThisBetround(Optional<UserBetRoundEntity> userBetRoundEntity,Optional<UserEntity> user){
+    public static void isUserBetRoundEmptyAndisUserPlayedForThisBetround(Optional<UserBetRoundEntity> userBetRoundEntity,UserEntity user){
         if (userBetRoundEntity.isEmpty()) throw new GeneralException("Invalid user bet round.",400);
-        if (!(userBetRoundEntity.get().getUserEntityId().equals(user.get().getId()))) throw new GeneralException("You didn't played this round.",400);
+        if (!(userBetRoundEntity.get().getUserEntityId().equals(user.getId()))) throw new GeneralException("You didn't played this round.",400);
 
     }
     public static UserBetRoundEntity createUserbetRoundBuilder(Long betRoundEntityId,UserEntity user){

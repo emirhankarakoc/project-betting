@@ -11,6 +11,7 @@ import com.betting.karakoc.model.enums.Selection;
 import com.betting.karakoc.model.real.*;
 import com.betting.karakoc.repository.*;
 
+import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.repo.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,6 +41,7 @@ public class UserManager implements UserService {
 private final JavaMailSender mailSender;
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
+    private final SecurityContextUtil securityContextUtil;
 
         public List<BetRoundEntityDTO> getPlannedBetRounds(){
         List<BetRoundEntity> betrounds = betRepository.findAll();
@@ -63,36 +65,30 @@ private final JavaMailSender mailSender;
 
         }
 
-        public UserBetRoundEntityDTO createUserBetRound(Long betRoundEntityId, String token){
+        public UserBetRoundEntityDTO createUserBetRound(Long betRoundEntityId){
+
             Optional<BetRoundEntity> kontrol = betRepository.findById(betRoundEntityId);
             isBetRoundEmpty(kontrol);
-            isBetRoundsGameIsNot13(kontrol.get());            //BOYLE BİR TOKEN YOKSA ERROR VERİLMELİDİR.
-            Optional<UserEntity> user = userRepository.findByToken(token);
-            isUserEmpty(user);
-            isTokenValid(user.get());
-           UserBetRoundEntity userbet =  userBetRoundRepository.save(createUserbetRoundBuilder(betRoundEntityId,user.get()));
+            isBetRoundsGameIsNotXX(kontrol.get());            //BOYLE BİR TOKEN YOKSA ERROR VERİLMELİDİR.
+           UserBetRoundEntity userbet =  userBetRoundRepository.save(createUserbetRoundBuilder(betRoundEntityId,securityContextUtil.getCurrentUser()));
             return userBetRoundToDto(userbet);
         }
 
 
         @Transactional
-        public UserBetEntityDTO creteUserBet(Long userBetRoundId, Long gameId, Selection selection, String token){
-            Optional<UserEntity> user = userRepository.findByToken(token);
-            isUserEmpty(user);
-            Optional<UserBetRoundEntity> betRound = userBetRoundRepository.findById(userBetRoundId);
-            isUserBetRoundIsEmpty(betRound);
-
-            Optional<BetRoundEntity> betRoundEntity = betRepository.findById(betRound.get().getBetRoundEntityId());
+        public UserBetEntityDTO creteUserBet(Long userBetRoundId, Long gameId, Long betTeamId){
+            UserEntity user = securityContextUtil.getCurrentUser();
+            Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findById(userBetRoundId);
+            isUserBetRoundIsEmpty(userbetround);
+            Optional<BetRoundEntity> betRoundEntity = betRepository.findById(userbetround.get().getBetRoundEntityId());
             isBetRoundEmpty(betRoundEntity);
+            Optional<GameEntity> game = gameRepository.findById(gameId);
+            isGameEmpty(game);
+
+        if (game.get().getBetroundId() != userbetround.get().getBetRoundEntityId()) throw new GeneralException("Wrong game selected.",400);
 
 
-        Optional<GameEntity> game = gameRepository.findById(gameId);
-        isGameEmpty(game);
-
-        if (game.get().getBetroundId() != betRound.get().getBetRoundEntityId()) throw new GeneralException("Wrong game selected.",400);
-
-
-        List<UserBetEntity> userBetlistesi = betRound.get().getUserBetList();
+        List<UserBetEntity> userBetlistesi = userbetround.get().getUserBetList();
         List<UserBetEntity> yeniListe = new ArrayList<>();
             for (UserBetEntity bet: userBetlistesi) {
                 if (bet.getGameEntityId().equals(gameId)) yeniListe.add(bet);
@@ -100,13 +96,14 @@ private final JavaMailSender mailSender;
 
         Optional<UserBetEntity> userBetControl = userBetRepository.findByGameEntityIdAndUserBetRoundId(gameId,userBetRoundId);
             isUserBetIsPresent(userBetControl);
+
             UserBetEntity userBet = new UserBetEntity();
             userBet.setUserBetRoundId(userBetRoundId);
             userBet.setGameEntityId(gameId);
-            userBet.setSelection(selection);
-            betRound.get().getUserBetList().add(userBet);
+            userBet.setBetTeamId(betTeamId);
+            userbetround.get().getUserBetList().add(userBet);
             userBetRepository.save(userBet);
-            userBetRoundRepository.save(betRound.get());
+            userBetRoundRepository.save(userbetround.get());
             //dtolama
             UserBetEntityDTO dto = userBetToDto(userBet);
             String oynayanTakimlar = "-";
@@ -131,12 +128,12 @@ private final JavaMailSender mailSender;
         }
 
         public UserEntityDTO changePassword(String username, String password, String newPassword){
-            Optional<UserEntity> user = userRepository.findByUsername(username);
-            isUserEmpty(user);
-            if (!user.get().getPassword().equals(password)) throw new GeneralException("Username or password is not matching.",400);
-            user.get().setPassword(newPassword);
-            userRepository.save(user.get());
-            UserEntityDTO dto =  userToDto(user.get());
+            UserEntity user = securityContextUtil.getCurrentUser();
+
+            if (!user.getPassword().equals(password)) throw new GeneralException("Username or password is not matching.",400);
+            user.setPassword(newPassword);
+            userRepository.save(user);
+            UserEntityDTO dto =  userToDto(user);
             dto.setMessage("Password changed. Good bettings!!!");
             return dto;
 

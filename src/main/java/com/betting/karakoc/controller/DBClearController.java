@@ -29,16 +29,5 @@ public class DBClearController {
         repo3.deleteAll();
         repo4.deleteAll();
     }
-    @PostMapping
-    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-    public String test5(){
-        return "Calisiyor 1";
-    }
-    @PutMapping
-    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public String t666(){
-        return "Calisiyor 1";
-    }
 
 }

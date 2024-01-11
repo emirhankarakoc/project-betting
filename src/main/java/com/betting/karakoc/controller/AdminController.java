@@ -7,6 +7,8 @@ import com.betting.karakoc.model.real.UserEntity;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import com.betting.karakoc.model.requests.CreateGameRequest;
 import com.betting.karakoc.model.requests.PutGameRequestWithTwoTeams;
+import com.betting.karakoc.security.annotations.OnlyAdmin;
+import com.betting.karakoc.security.annotations.OnlyUser;
 import com.betting.karakoc.service.repo.AdminService;
 import com.betting.karakoc.service.repo.BetSummaryService;
 import com.betting.karakoc.service.repo.MailService;
@@ -17,6 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.betting.karakoc.KarakocApplication.gameMaxCount;
+
 @RestController
 @RequestMapping("/bet/admin")
 @AllArgsConstructor
@@ -30,25 +35,17 @@ public class AdminController {
             summary = "brings all user entities with pages. [0,x]")
     @GetMapping("/getAllUsers")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-    public Page<UserEntity> getAll(@RequestParam String token,@RequestParam int pageNumber){
-        return service.getAllUsers(token,pageNumber);
+@OnlyAdmin
+    public Page<UserEntity> getAll(@RequestParam int pageNumber){
+        return service.getAllUsers(pageNumber);
     }
 
-    @Operation(
-            summary = "creating a new betround")
+    @Operation(summary = "creating a new betround")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-
-
-
-
-
-
-
     @PostMapping("/postBetRound")
-    public BetRoundEntityDTO postBetRound(@RequestBody CreateBetRoundRequest request, @RequestParam String token){
-        return service.createBetRound(request,token); // bir html işlemi
+    @OnlyAdmin
+    public BetRoundEntityDTO postBetRound(@RequestBody CreateBetRoundRequest request){
+        return service.createBetRound(request); // bir html işlemi
     }
 
 
@@ -62,53 +59,48 @@ public class AdminController {
 
     private final BetSummaryService betSummaryService;
 
-    @Operation(
-            summary = "brings all userbetrounds for given betrounds id")
-
-    @GetMapping("/allBetsByGame")
+    @Operation(summary = "brings all userbetrounds for given betrounds id")
+    @GetMapping("/Game")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+    @OnlyAdmin
     public List<UserBetEntityDTO> getAllBetsByGame(@RequestParam Long betRoundId){
         return betSummaryService.getAllBetsByGame(betRoundId);
     }
 
-    @Operation(
-            summary = "brings a text like\nCONGRATS x, YOU WIN y GAME")
+    @Operation(summary = "brings a text like\nCONGRATS x, YOU WIN y GAME")
     @PostMapping("/summaryForAnyUser")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+    @OnlyAdmin
+    public String summaryBets(@RequestParam Long userBetRoundId){
+        return betSummaryService.hesapla(userBetRoundId);
 
-    public String summaryBets(@RequestParam Long userBetRoundId, @RequestParam String token){
-        return betSummaryService.summaryBetsForTwoTeams(userBetRoundId,token);
     }
 
-    @Operation(
-            summary = "creating a game for given betround")
-
+    @Operation(summary = "creating a game for given betround")
     @PostMapping("/createGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-
-    public GameEntityDTO createGame(@RequestParam Long betroundId , @RequestBody CreateGameRequest request, @RequestParam int teamsSize, @RequestParam String token){
-        return service.createGame(betroundId,request,teamsSize,token);
+    @OnlyAdmin
+    public GameEntityDTO createGame(@RequestParam Long betroundId , @RequestBody CreateGameRequest request, @RequestParam int teamsSize ){
+        return service.createGame(betroundId,request,teamsSize);
     }
 
     @Operation(
-            summary = "brings all CREATED betrounds, after adding 13 game, betrounds status automaticly changes to PLANNED\nso this method just gives \"NOT FINISHED YET betrounds\"")
+            summary = "brings all CREATED betrounds, after adding static game count(in main class), betrounds status automaticly changes to PLANNED\nso this method just gives \"NOT FINISHED YET betrounds\"")
 
     @GetMapping("/getCreatedBetRounds")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-    public List<BetRoundEntityDTO> getCreatedBetRounds(@RequestParam String token){
-        return service.getCreatedBetRounds(token);
+    @OnlyAdmin
+    public List<BetRoundEntityDTO> getCreatedBetRounds(){
+        return service.getCreatedBetRounds();
     }
 
     @Operation(
             summary = "change the match score with gameId")
     @PutMapping("/putGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-
-    public GameEntityDTO putGame(@RequestBody PutGameRequestWithTwoTeams request, @RequestParam String token){
-        return service.putGame(request,token);
+    @OnlyAdmin
+    public GameEntityDTO putGame(@RequestBody PutGameRequestWithTwoTeams request){
+        return service.putGame(request);
     }
 
 
@@ -116,18 +108,18 @@ public class AdminController {
             summary = "after all bets, finishes the betrounds manually.")
     @PutMapping("/endBetRound")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-    public BetRoundEntityDTO endBetRound(@RequestParam Long betroundId, @RequestParam String token){
-        return service.endBetRound(betroundId,token);
+@OnlyAdmin
+    public BetRoundEntityDTO endBetRound(@RequestParam Long betroundId){
+        return service.endBetRound(betroundId);
     }
 
     @Operation(
             summary = "sends e-mail to all users participating in this betround")
     @GetMapping("/sendMailToParticipants")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
-    public String mailSender(@RequestParam Long betroundId,@RequestParam String token){
-        return mailService.mailSender2(token,betroundId);
+@OnlyAdmin
+    public String mailSender(@RequestParam Long betroundId){
+        return mailService.mailSender2(betroundId);
     }
     //bu method neden get, herhalde kullandigim javamailsender bir veri get ediyor ve onu bekliyoruz. aslinda post olmasi lazim bende biliyorum ama post yapinca gondermedi.
     //bende get yaptim. denedim yani gercekten postu denedim.

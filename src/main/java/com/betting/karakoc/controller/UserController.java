@@ -54,8 +54,8 @@ public class UserController {
     @PostMapping("/createUserBetRound")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserBetRoundEntityDTO createUserBetRound(@RequestParam Long betRoundId, @RequestParam String token){
-        return service.createUserBetRound(betRoundId,token);
+    public UserBetRoundEntityDTO createUserBetRound(@RequestParam Long betRoundId){
+        return service.createUserBetRound(betRoundId);
     }
 
     @Operation(
@@ -63,8 +63,8 @@ public class UserController {
     @PostMapping("/createBet")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserBetEntityDTO creteUserBet(@RequestParam Long userBetRoundId, @RequestParam Long gameId,@RequestParam Selection selection,@RequestParam String token){
-        return service.creteUserBet(userBetRoundId, gameId, selection,token);
+    public UserBetEntityDTO creteUserBet(@RequestParam Long userBetRoundId, @RequestParam Long gameId,@RequestParam Long betTeamId){
+        return service.creteUserBet(userBetRoundId, gameId, betTeamId);
     }/*
     @Operation(
             summary = "brings a specific betround, include all games.")

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.betting.karakoc.KarakocApplication.gameMaxCount;
+
 @Entity
 @Data
 public class BetRoundEntity {
@@ -38,12 +40,12 @@ public static void isBetroundEnded(Optional<BetRoundEntity> betround){
     if (betround.get().getBetStatus()!=BetStatus.ENDED) throw new GeneralException("This betround is not finished yet.",400);
 
 }
-public static void isBetroundsGameSizeLowerThan13(BetRoundEntity betRound){
-    if (betRound.getGames().size()==13) throw new GeneralException("Cant add, game count must be 13.",400);
+public static void isBetroundsGameSizeLowerThanXX(BetRoundEntity betRound){
+    if (betRound.getGames().size()==gameMaxCount) throw new GeneralException("Cant add, game count must be 3.",400);
 
 }
-public static void setPlannedIfGamesSizeIs13(BetRoundEntity betRound){
-    if (betRound.getGames().size()==13){
+public static void setPlannedIfGamesSizeIsXX(BetRoundEntity betRound){
+    if (betRound.getGames().size()==gameMaxCount){
         betRound.setBetStatus(BetStatus.PLANNED);
     }
 }
@@ -51,8 +53,8 @@ public static void setPlannedIfGamesSizeIs13(BetRoundEntity betRound){
 public static void isPlayDatePast(LocalDateTime date){
     if (date.isBefore(LocalDateTime.now())) throw new GeneralException("You cant add a betround which have past playdate.",400);
 }
-public static void isBetRoundsGameIsNot13(BetRoundEntity betRound){
-    if (betRound.getGames().size()!=13) throw new GeneralException("You cant create userbetround for this betround, betrounds games isnt enough now: "+betRound.getGames().size()+"...   Must be 13",400);
+public static void isBetRoundsGameIsNotXX(BetRoundEntity betRound){
+    if (betRound.getGames().size()!=gameMaxCount) throw new GeneralException("You cant create userbetround for this betround, betrounds games isnt enough now: "+betRound.getGames().size()+"...   Must be 3",400);
 
 }
 public static void isBetroundStatusCreatedOrEnded(BetRoundEntity betRound){

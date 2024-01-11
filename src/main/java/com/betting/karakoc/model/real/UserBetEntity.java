@@ -10,6 +10,8 @@ import lombok.Data;
 import java.util.List;
 import java.util.Optional;
 
+import static com.betting.karakoc.KarakocApplication.gameMaxCount;
+
 @Entity
 @Data
 public class UserBetEntity {
@@ -18,8 +20,8 @@ public class UserBetEntity {
     private String id;
     private Long userBetRoundId;
     private Long gameEntityId;
-    @Enumerated
-    private Selection selection; // 1  0  2
+
+    private Long betTeamId;
     private Boolean isGuessCorrect;
 
 
@@ -30,14 +32,14 @@ public class UserBetEntity {
 
     public static void userBetValidation(List<UserBetEntity> list){
         if (list.isEmpty())throw new GeneralException("An error occured in summaryBets method.",400);
-        if (list.size()!=13) throw new GeneralException("You have to bet all games.",400);
+        if (list.size()!=gameMaxCount) throw new GeneralException("You have to bet all games.",400);
     }
 
     public static UserBetEntityDTO userBetToDto(UserBetEntity userBet){
 
         UserBetEntityDTO dto = new UserBetEntityDTO();
         dto.setId(userBet.getId());
-        dto.setSelection(userBet.getSelection());
+        dto.setBetTeamId(userBet.getBetTeamId());
         dto.setGameEntityId(userBet.getGameEntityId());
         dto.setUserBetRoundId(userBet.getUserBetRoundId());
         dto.setIsGuessCorrect(userBet.getIsGuessCorrect());

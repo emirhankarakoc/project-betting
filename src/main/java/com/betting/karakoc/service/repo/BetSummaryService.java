@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface BetSummaryService {
     List<UserBetEntityDTO> getAllBetsByGame(long betRoundId);
-    String summaryBetsForTwoTeams(Long betRoundId, String token);
+   // String summaryBetsForTwoTeams(Long betRoundId);
+   public String hesapla(Long userBetRoundId);
 }
