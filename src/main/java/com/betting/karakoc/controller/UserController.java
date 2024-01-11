@@ -9,6 +9,7 @@ import com.betting.karakoc.model.enums.Selection;
 import com.betting.karakoc.model.real.BetRoundEntity;
 
 
+import com.betting.karakoc.security.annotations.IsAuthentificated;
 import com.betting.karakoc.service.repo.MailService;
 import com.betting.karakoc.service.repo.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,21 +42,24 @@ public class UserController {
     public List<BetRoundEntityDTO> getEndedBetRounds() {
         return service.getEndedBetRounds();
     }
+
     @Operation(
             summary = "brings betrounds which status is PLANNED")
 
     @GetMapping("/plannedBetRounds")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+    @IsAuthentificated
     public List<BetRoundEntityDTO> getPlannedBetRounds() {
         return service.getPlannedBetRounds();
     }
+
     @Operation(
             summary = "creating an userbetround for given betroundId")
 
     @PostMapping("/createUserBetRound")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserBetRoundEntityDTO createUserBetRound(@RequestParam Long betRoundId){
+    public UserBetRoundEntityDTO createUserBetRound(@RequestParam Long betRoundId) {
         return service.createUserBetRound(betRoundId);
     }
 
@@ -63,7 +68,7 @@ public class UserController {
     @PostMapping("/createBet")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserBetEntityDTO creteUserBet(@RequestParam Long userBetRoundId, @RequestParam Long gameId,@RequestParam Long betTeamId){
+    public UserBetEntityDTO creteUserBet(@RequestParam Long userBetRoundId, @RequestParam Long gameId, @RequestParam Long betTeamId) {
         return service.creteUserBet(userBetRoundId, gameId, betTeamId);
     }/*
     @Operation(
@@ -82,7 +87,9 @@ public class UserController {
     @PostMapping("/changePassword")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserEntityDTO changePassword(String username, String password, String newPassword){return service.changePassword(username,password,newPassword);}
+    public UserEntityDTO changePassword(String username, String password, String newPassword) {
+        return service.changePassword(username, password, newPassword);
+    }
 
 
     @Operation(
@@ -90,6 +97,8 @@ public class UserController {
     @GetMapping("/forgotPassword")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public String forgotPassword(@RequestParam String username){return mailService.forgotPassword(username);}
+    public String forgotPassword(@RequestParam String username) {
+        return mailService.forgotPassword(username);
+    }
 
 }

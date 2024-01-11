@@ -44,7 +44,7 @@ public class AdminController {
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @PostMapping("/postBetRound")
     @OnlyAdmin
-    public BetRoundEntityDTO postBetRound(@RequestBody CreateBetRoundRequest request){
+    public BetRoundEntityDTO postBetRound(@RequestBody CreateBetRoundRequest request ){
         return service.createBetRound(request); // bir html işlemi
     }
 

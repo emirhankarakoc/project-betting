@@ -6,6 +6,7 @@ import com.betting.karakoc.model.enums.BetStatus;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
