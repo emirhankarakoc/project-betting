@@ -42,7 +42,7 @@ public static void isBetroundEnded(Optional<BetRoundEntity> betround){
 
 }
 public static void isBetroundsGameSizeLowerThanXX(BetRoundEntity betRound){
-    if (betRound.getGames().size()==gameMaxCount) throw new GeneralException("Cant add, game count must be 3.",400);
+    if (betRound.getGames().size()==gameMaxCount) throw new GeneralException("Cant add, game count must be "+gameMaxCount+".",400);
 
 }
 public static void setPlannedIfGamesSizeIsXX(BetRoundEntity betRound){
@@ -55,7 +55,7 @@ public static void isPlayDatePast(LocalDateTime date){
     if (date.isBefore(LocalDateTime.now())) throw new GeneralException("You cant add a betround which have past playdate.",400);
 }
 public static void isBetRoundsGameIsNotXX(BetRoundEntity betRound){
-    if (betRound.getGames().size()!=gameMaxCount) throw new GeneralException("You cant create userbetround for this betround, betrounds games isnt enough now: "+betRound.getGames().size()+"...   Must be 3",400);
+    if (betRound.getGames().size()!=gameMaxCount) throw new GeneralException("You cant create userbetround for this betround, betrounds games isnt enough now... Games count: "+betRound.getGames().size()+"...   Must be :"+gameMaxCount,400);
 
 }
 public static void isBetroundStatusCreatedOrEnded(BetRoundEntity betRound){

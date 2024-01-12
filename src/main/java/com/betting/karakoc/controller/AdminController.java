@@ -3,6 +3,7 @@ package com.betting.karakoc.controller;
 import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.model.dtos.GameEntityDTO;
 import com.betting.karakoc.model.dtos.UserBetEntityDTO;
+import com.betting.karakoc.model.real.GameEntity;
 import com.betting.karakoc.model.real.UserEntity;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import com.betting.karakoc.model.requests.CreateGameRequest;
@@ -48,7 +49,11 @@ public class AdminController {
         return service.createBetRound(request); // bir html işlemi
     }
 
-
+    @PostMapping("/changeToTurtle/{gameId}")
+    @OnlyAdmin
+    public GameEntity changeGameToModule(@PathVariable Long gameId){
+       return service.changeGameToModule(gameId);
+    }
 
 
 

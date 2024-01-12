@@ -11,6 +11,7 @@ import lombok.Data;
 import java.util.*;
 
 import static com.betting.karakoc.model.enums.GameType.*;
+import static com.betting.karakoc.model.real.BetRoundEntity.isBetRoundEmpty;
 
 @Entity
 @Data
@@ -66,8 +67,8 @@ public class GameEntity {
         int dogruSayisi = 0;
         List<UserBetEntity> adaminBetleri = userBetRound.getUserBetList();
         switch (type) {
-            case FOOTBALL: {
-                isTeamsSizeEqualsToParam(game.getTeams().size(), 2);
+            case SCORE: {
+
                 for (int i = 0; i < adaminBetleri.size(); i++) {
                     if (game.getTeams().get(0).getScore() < game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(1).getId(), adaminBetleri.get(i).getBetTeamId()) || game.getTeams().get(0).getScore() > game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(0).getId(), adaminBetleri.get(i).getBetTeamId())) {
                         dogruSayisi++;
@@ -76,33 +77,7 @@ public class GameEntity {
                 return dogruSayisi;
 
             }
-            case BASKETBALL: {
-                isTeamsSizeEqualsToParam(game.getTeams().size(), 2);
-                for (int i = 0; i < adaminBetleri.size(); i++) {
-                    if (game.getTeams().get(0).getScore() < game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(1).getId(), adaminBetleri.get(i).getBetTeamId()) || game.getTeams().get(0).getScore() == game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(0).getId(), adaminBetleri.get(i).getBetTeamId()) || game.getTeams().get(0).getScore() > game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(0).getId(), adaminBetleri.get(i).getBetTeamId())) {
-                        dogruSayisi++;
-                    }
-                }
-                return dogruSayisi;
-
-            }
-            case SWIMMING: {
-                int enKucuk = Integer.MAX_VALUE; // Başlangıç değeri büyük bir sayı yapın
-                long enKucukId = -1; // Başlangıç değeri geçerli bir ID olmadığından -1 yapın
-
-                for (int i = 0; i < game.getTeams().size(); i++) {
-                    if (enKucuk > game.getTeams().get(i).getScore()) {
-                        enKucuk = game.getTeams().get(i).getScore();
-                        enKucukId = game.getTeams().get(i).getId();
-                    }
-                }
-
-                for (int i = 0; i < adaminBetleri.size(); i++) {
-                    if (enKucukId == adaminBetleri.get(i).getBetTeamId()) dogruSayisi++;
-                }
-                break; // switch bloğundan çıkış yapın
-            }
-            case FORMULA_1: {
+            case TIME: {
                 int enKucuk = Integer.MAX_VALUE; // Başlangıç değeri büyük bir sayı yapın
                 long enKucukId = -1; // Başlangıç değeri geçerli bir ID olmadığından -1 yapın
 
@@ -125,4 +100,36 @@ public class GameEntity {
 
         return dogruSayisi;
     }
+    public static List<Team> setGameToTurtle(GameEntity gameId) {
+        Random random = new Random();
+
+        while (true) {
+            for (int i = 0; i < gameId.getTeams().size(); i++) {
+                Team currentTeam = gameId.getTeams().get(i);
+                int currentScore = currentTeam.getScore();
+
+                if (currentScore >= 50) {
+                    // If any team's score reaches 100 or more, return the teams list
+                    return gameId.getTeams();
+                }
+
+                // Generate a random score between 1 and 3 and update the team's score
+                int randomScore = random.nextInt(3) + 1;
+                currentTeam.setScore(currentScore + randomScore);
+            }
         }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

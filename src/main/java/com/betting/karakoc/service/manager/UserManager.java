@@ -23,6 +23,8 @@ import java.util.*;
 
 import static com.betting.karakoc.model.real.BetRoundEntity.*;
 import static com.betting.karakoc.model.real.GameEntity.isGameEmpty;
+import static com.betting.karakoc.model.real.GameEntity.setGameToTurtle;
+import static com.betting.karakoc.model.real.Team.isTeamEmpty;
 import static com.betting.karakoc.model.real.UserBetEntity.isUserBetIsPresent;
 import static com.betting.karakoc.model.real.UserBetEntity.userBetToDto;
 import static com.betting.karakoc.model.real.UserBetRoundEntity.*;
@@ -42,6 +44,7 @@ private final JavaMailSender mailSender;
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
     private final SecurityContextUtil securityContextUtil;
+    private final TeamRepository teamRepository;
 
         public List<BetRoundEntityDTO> getPlannedBetRounds(){
         List<BetRoundEntity> betrounds = betRepository.findAll();
@@ -77,6 +80,7 @@ private final JavaMailSender mailSender;
 
         @Transactional
         public UserBetEntityDTO creteUserBet(Long userBetRoundId, Long gameId, Long betTeamId){
+
             UserEntity user = securityContextUtil.getCurrentUser();
             Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findById(userBetRoundId);
             isUserBetRoundIsEmpty(userbetround);
@@ -84,8 +88,11 @@ private final JavaMailSender mailSender;
             isBetRoundEmpty(betRoundEntity);
             Optional<GameEntity> game = gameRepository.findById(gameId);
             isGameEmpty(game);
+            Optional<Team> team = teamRepository.findById(betTeamId);
+            isTeamEmpty(team);
 
         if (game.get().getBetroundId() != userbetround.get().getBetRoundEntityId()) throw new GeneralException("Wrong game selected.",400);
+        if (!game.get().getTeams().contains(team.get())) throw  new GeneralException("This game does not contain given betTeamId.",400);
 
 
         List<UserBetEntity> userBetlistesi = userbetround.get().getUserBetList();
@@ -110,7 +117,7 @@ private final JavaMailSender mailSender;
             for (int i = 0;i<game.get().getTeams().size();i++){
                 oynayanTakimlar+= game.get().getTeams().get(i).getName() + "-";
             }
-            dto.setOynayanTakimlar(oynayanTakimlar);
+            dto.setOynayanTakimlar(oynayanTakimlar+", Oynadiginiz takim : "+ teamRepository.findById(betTeamId).get().getName());
             return dto;
 
 

@@ -2,6 +2,7 @@ package com.betting.karakoc.service.repo;
 
 import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.model.dtos.GameEntityDTO;
+import com.betting.karakoc.model.real.GameEntity;
 import com.betting.karakoc.model.real.UserEntity;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import com.betting.karakoc.model.requests.CreateGameRequest;
@@ -17,4 +18,5 @@ public interface AdminService {
     List<BetRoundEntityDTO> getCreatedBetRounds();
     GameEntityDTO putGame(PutGameRequestWithTwoTeams request);
     BetRoundEntityDTO endBetRound(Long betroundId);
+    GameEntity changeGameToModule(Long gameId);
 }

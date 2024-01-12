@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class KarakocApplication {
-	public static int gameMaxCount = 2;
+	public static int gameMaxCount = 1;
 	public static void main(String[] args) {
 		SpringApplication.run(KarakocApplication.class, args);
 	}
