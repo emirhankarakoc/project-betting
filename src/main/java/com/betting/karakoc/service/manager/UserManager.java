@@ -69,6 +69,7 @@ private final JavaMailSender mailSender;
         }
 
         public UserBetRoundEntityDTO createUserBetRound(Long betRoundEntityId){
+            // todo eger betround bitmisse , ekleyemesin. created ise ekleyemesin.
 
             Optional<BetRoundEntity> kontrol = betRepository.findById(betRoundEntityId);
             isBetRoundEmpty(kontrol);
@@ -80,6 +81,7 @@ private final JavaMailSender mailSender;
 
         @Transactional
         public UserBetEntityDTO creteUserBet(Long userBetRoundId, Long gameId, Long betTeamId){
+            // todo eger betround bitmisse , ekleyemesin. created ise ekleyemesin.
 
             UserEntity user = securityContextUtil.getCurrentUser();
             Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findById(userBetRoundId);
