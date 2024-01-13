@@ -30,7 +30,9 @@ public class UserDetailsManager implements UserDetailsService {
         if (userList.isEmpty()) {
             UserEntity admin = new UserEntity();
             admin.setId(UUID.randomUUID().toString());
-            admin.setUsername("jessuothebusiness@gmail.com");
+            admin.setUsername("ADMIN");
+            // alttakini calistirinca 401, usttekini calistirinca token geliyor
+            //    admin.setUsername("jessuothebusiness@gmail.com");
             admin.setFirstname("EMIRHAN6");
             admin.setRole(UserRole.ROLE_ADMIN);
             admin.setPassword("ADMIN");
