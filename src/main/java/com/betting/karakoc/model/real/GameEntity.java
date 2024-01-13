@@ -100,21 +100,15 @@ public class GameEntity {
 
         return dogruSayisi;
     }
-    public static List<Team> setGameToTurtle(GameEntity gameId) {
+    public static List<Team> setGameToTurtle(GameEntity game) {
         Random random = new Random();
 
         while (true) {
-            for (int i = 0; i < gameId.getTeams().size(); i++) {
-                Team currentTeam = gameId.getTeams().get(i);
+            for (int i = 0; i < game.getTeams().size(); i++) {
+                Team currentTeam = game.getTeams().get(i);
                 int currentScore = currentTeam.getScore();
-
-                if (currentScore >= 50) {
-                    // If any team's score reaches 100 or more, return the teams list
-                    return gameId.getTeams();
-                }
-
-                // Generate a random score between 1 and 3 and update the team's score
-                int randomScore = random.nextInt(3) + 1;
+                if (currentScore >= 50)return game.getTeams();
+                int randomScore = random.nextInt(3) + 1; // 1,2,3
                 currentTeam.setScore(currentScore + randomScore);
             }
         }

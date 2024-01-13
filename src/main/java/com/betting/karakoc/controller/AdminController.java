@@ -51,8 +51,8 @@ public class AdminController {
 
     @PostMapping("/changeToTurtle/{gameId}")
     @OnlyAdmin
-    public GameEntity changeGameToModule(@PathVariable Long gameId){
-       return service.changeGameToModule(gameId);
+    public GameEntity changeGameModuleToTurtleGame(@PathVariable Long gameId){
+       return service.changeGameModuleToTurtleGame(gameId);
     }
 
 

@@ -23,18 +23,19 @@ import java.util.UUID;
 public class UserDetailsManager implements UserDetailsService {
 
     private  final UserEntityRepository userRepository;
-
+    private final TokenManager tokenManager;
     @PostConstruct
     public void init(){
         List<UserEntity> userList = userRepository.findAll();
         if (userList.isEmpty()) {
             UserEntity admin = new UserEntity();
             admin.setId(UUID.randomUUID().toString());
-            admin.setUsername("ADMIN");
+            admin.setUsername("jessuothebusiness@gmail.com");
             admin.setFirstname("EMIRHAN6");
             admin.setRole(UserRole.ROLE_ADMIN);
             admin.setPassword("ADMIN");
             userRepository.save(admin);
+            System.out.println(tokenManager.generateToken(admin.getUsername()));
             }
         }
 

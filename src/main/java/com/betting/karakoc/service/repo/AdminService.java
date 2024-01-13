@@ -18,5 +18,5 @@ public interface AdminService {
     List<BetRoundEntityDTO> getCreatedBetRounds();
     GameEntityDTO putGame(PutGameRequestWithTwoTeams request);
     BetRoundEntityDTO endBetRound(Long betroundId);
-    GameEntity changeGameToModule(Long gameId);
+    GameEntity changeGameModuleToTurtleGame(Long gameId);
 }

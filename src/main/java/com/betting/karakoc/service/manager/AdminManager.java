@@ -113,7 +113,7 @@ public class AdminManager implements AdminService {
         return gameToDtoWithTwoTeams(game.get());
     }
 
-    public GameEntity changeGameToModule(Long gameId){
+    public GameEntity changeGameModuleToTurtleGame(Long gameId){
         Optional<GameEntity> game = gameRepository.findById(gameId);
         isGameEmpty(game);
         teamRepository.saveAll(setGameToTurtle(game.get()));
