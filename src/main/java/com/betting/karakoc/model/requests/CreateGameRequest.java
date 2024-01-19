@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 public class CreateGameRequest {
-  private List<String> teams;
-  private GameType gameType;
+    private List<String> teams;
+    private GameType gameType;
 
 
 }

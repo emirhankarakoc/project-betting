@@ -1,7 +1,8 @@
 package com.betting.karakoc.model.real;
 
 
-import com.betting.karakoc.exceptions.GeneralException;
+import com.betting.karakoc.exceptions.general.BadRequestException;
+import com.betting.karakoc.exceptions.general.NotfoundException;
 import com.betting.karakoc.model.dtos.GameEntityDTO;
 import com.betting.karakoc.model.enums.GameType;
 import com.betting.karakoc.model.requests.CreateGameRequest;
@@ -9,9 +10,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.*;
-
-import static com.betting.karakoc.model.enums.GameType.*;
-import static com.betting.karakoc.model.real.BetRoundEntity.isBetRoundEmpty;
 
 @Entity
 @Data
@@ -38,7 +36,7 @@ public class GameEntity {
     }
 
     public static void isGameEmpty(Optional<GameEntity> game) {
-        if (game.isEmpty()) throw new GeneralException("Invalid Game Id.", 400);
+        if (game.isEmpty()) throw new NotfoundException("Invalid Game Id.");
     }
 
     public static GameEntity createGameBuilder(BetRoundEntity betRound, CreateGameRequest request, int teamsSize) {
@@ -58,7 +56,7 @@ public class GameEntity {
 
 
     public static void isTeamsSizeEqualsToParam(int j, int i) {
-        if (j != i) throw new GeneralException("Teams size and given parameter must be equal.", 400);
+        if (j != i) throw new BadRequestException("Teams size and given parameter must be equal.");
     }
 
 
@@ -69,8 +67,8 @@ public class GameEntity {
         switch (type) {
             case SCORE: {
 
-                for (int i = 0; i < adaminBetleri.size(); i++) {
-                    if (game.getTeams().get(0).getScore() < game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(1).getId(), adaminBetleri.get(i).getBetTeamId()) || game.getTeams().get(0).getScore() > game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(0).getId(), adaminBetleri.get(i).getBetTeamId())) {
+                for (UserBetEntity userBet : adaminBetleri) {
+                    if (game.getTeams().get(0).getScore() < game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(1).getId(), userBet.getBetTeamId()) || game.getTeams().get(0).getScore() > game.getTeams().get(1).getScore() && Objects.equals(game.getTeams().get(0).getId(), userBet.getBetTeamId())) {
                         dogruSayisi++;
                     }
                 }
@@ -88,8 +86,8 @@ public class GameEntity {
                     }
                 }
 
-                for (int i = 0; i < adaminBetleri.size(); i++) {
-                    if (enKucukId == adaminBetleri.get(i).getBetTeamId()) dogruSayisi++;
+                for (UserBetEntity userBet : adaminBetleri) {
+                    if (enKucukId == userBet.getBetTeamId()) dogruSayisi++;
                 }
                 break; // switch bloğundan çıkış yapın
             }
@@ -100,6 +98,7 @@ public class GameEntity {
 
         return dogruSayisi;
     }
+
     public static List<Team> setGameToTurtle(GameEntity game) {
         Random random = new Random();
 
@@ -107,7 +106,7 @@ public class GameEntity {
             for (int i = 0; i < game.getTeams().size(); i++) {
                 Team currentTeam = game.getTeams().get(i);
                 int currentScore = currentTeam.getScore();
-                if (currentScore >= 50)return game.getTeams();
+                if (currentScore >= 50) return game.getTeams();
                 int randomScore = random.nextInt(3) + 1; // 1,2,3
                 currentTeam.setScore(currentScore + randomScore);
             }

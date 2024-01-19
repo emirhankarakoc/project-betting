@@ -1,14 +1,16 @@
 package com.betting.karakoc.model.real;
 
 
-import com.betting.karakoc.exceptions.GeneralException;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import com.betting.karakoc.exceptions.general.BadRequestException;
+import com.betting.karakoc.exceptions.general.NotfoundException;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -21,7 +23,7 @@ public class Team {
     private int score;
 
 
-    public static void isTeamEmpty(Optional<Team> team){
-        if (team.isEmpty()) throw new GeneralException("Invalid team id.",400);
+    public static void isTeamEmpty(Optional<Team> team) {
+        if (team.isEmpty()) throw new NotfoundException("Invalid team id.");
     }
 }

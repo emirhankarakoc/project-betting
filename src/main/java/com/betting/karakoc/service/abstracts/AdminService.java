@@ -1,4 +1,4 @@
-package com.betting.karakoc.service.repo;
+package com.betting.karakoc.service.abstracts;
 
 import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.model.dtos.GameEntityDTO;
@@ -13,10 +13,21 @@ import java.util.List;
 
 public interface AdminService {
     Page<UserEntity> getAllUsers(int pageNumber);
+
     BetRoundEntityDTO createBetRound(CreateBetRoundRequest request);
+
     GameEntityDTO createGame(Long betroundId, CreateGameRequest request, int teamsSize);
+
     List<BetRoundEntityDTO> getCreatedBetRounds();
-    GameEntityDTO putGame(PutGameRequestWithTwoTeams request);
+
+    GameEntityDTO putGame(Long betroundId,Long gameId,PutGameRequestWithTwoTeams request);
+
     BetRoundEntityDTO endBetRound(Long betroundId);
+
     GameEntity changeGameModuleToTurtleGame(Long gameId);
+
+
+
+    BetRoundEntityDTO deleteBetRound(Long betroundId);
+
 }

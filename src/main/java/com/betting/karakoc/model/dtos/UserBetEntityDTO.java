@@ -1,7 +1,5 @@
 package com.betting.karakoc.model.dtos;
 
-import com.betting.karakoc.model.enums.Selection;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data

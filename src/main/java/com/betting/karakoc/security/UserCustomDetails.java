@@ -11,16 +11,18 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-public class UserCustomDetails implements UserDetails{
+public class UserCustomDetails implements UserDetails {
     private final UserEntity user;
+
+    public UserCustomDetails(UserEntity user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of( new SimpleGrantedAuthority(user.getRole().toString()));
+        return List.of(new SimpleGrantedAuthority(user.getRole().toString()));
     }
-    public UserCustomDetails(UserEntity user){
-        this.user = user;
-    }
+
     @Override
     public String getPassword() {
         return user.getPassword();

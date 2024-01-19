@@ -39,9 +39,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         final String authHeader = httpServletRequest.getHeader(HEADER_STRING);
 
-        if (authHeader == null){
-             return;
-      }
+        if (authHeader == null) {
+            return;
+        }
 
         if (!authHeader.startsWith(TOKEN_PREFIX)) {
             return;

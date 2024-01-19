@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             response.addHeader("access_denied_reason", "authentication_required");
             response.sendError(401, "Unauthorized");
 
-        }else
+        } else
             response.sendError(403, "Access Denied");
     }
 

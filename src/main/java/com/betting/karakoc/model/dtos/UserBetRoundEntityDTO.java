@@ -1,7 +1,6 @@
 package com.betting.karakoc.model.dtos;
 
 import com.betting.karakoc.model.real.UserBetEntity;
-import com.betting.karakoc.model.real.UserBetRoundEntity;
 import lombok.Data;
 
 import java.time.LocalDate;

@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class PutGameRequestWithTwoTeams {
-    public Long gameId;
+
 
     public List<Integer> scores;
 

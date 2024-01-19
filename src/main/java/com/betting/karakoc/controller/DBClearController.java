@@ -4,7 +4,10 @@ import com.betting.karakoc.repository.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/bet/db")
@@ -18,11 +21,12 @@ public class DBClearController {
     private final GameRepository repo2;
     private final UserBetRoundRepository repo3;
     private final UserBetRepository repo4;
+
     @Operation(summary = "for fresh start")
     @DeleteMapping
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public void deleteAllDB(){
+    public void deleteAllDB() {
         repo0.deleteAll();
         repo1.deleteAll();
         repo2.deleteAll();

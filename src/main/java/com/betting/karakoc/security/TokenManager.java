@@ -16,6 +16,7 @@ public class TokenManager {
         byte[] keyBytes = Decoders.BASE64.decode("1234567890Yakup12345678901234Toto1234567890Games1234567890");
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -27,7 +28,7 @@ public class TokenManager {
     }
 
     public boolean tokenValidate(String token) {
-        if(getUsernameToken(token) != null && isExpired(token)) {
+        if (getUsernameToken(token) != null && isExpired(token)) {
             return true;
         }
         return false;
