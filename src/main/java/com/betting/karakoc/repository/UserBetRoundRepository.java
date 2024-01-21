@@ -15,7 +15,7 @@ public interface UserBetRoundRepository extends JpaRepository<UserBetRoundEntity
 
     Optional<UserBetRoundEntity> findByIdAndUserEntityId(Long userBetRoundId, String userId);
 
-    Optional<UserBetRoundEntity> findByBetRoundEntityId(Long betroundId);
+    List<UserBetRoundEntity> findByBetRoundEntityId(Long betroundId);
 
     List<UserBetRoundEntity> findAllByBetRoundEntityId(Long betroundId);
 }

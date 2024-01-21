@@ -11,7 +11,6 @@ import com.betting.karakoc.model.real.*;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.abstracts.UserService;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -91,7 +90,7 @@ public class UserManager implements UserService {
         isBetroundStatusCreatedOrEnded(betRoundEntity.get());
 
         Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findById(userBetRoundId);
-        isUserBetRoundIsEmpty(userbetround);
+        isUserBetRoundEmpty(userbetround);
 
         Optional<GameEntity> game = gameRepository.findById(gameId);
         isGameEmpty(game);

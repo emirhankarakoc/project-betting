@@ -2,6 +2,7 @@ package com.betting.karakoc.model.real;
 
 
 import com.betting.karakoc.exceptions.general.BadRequestException;
+import com.betting.karakoc.exceptions.general.NotfoundException;
 import com.betting.karakoc.model.dtos.UserBetEntityDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,6 +55,11 @@ public class UserBetEntity {
 
     public static void isUserBetIsPresent(Optional<UserBetEntity> userBet) {
         if (userBet.isPresent()) throw new BadRequestException("You already put your bet.");
+
+    }
+
+    public static void isUserBetEmpty(Optional<UserBetEntity> userBet) {
+        if (userBet.isEmpty()) throw new NotfoundException("Invalid bet id");
 
     }
 

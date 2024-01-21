@@ -25,7 +25,7 @@ public class AccountController {
     private final MailSenderService mailSenderService;
 
     @Operation(
-            summary = "register to system.")
+            summary = "REGISTER")
     @PostMapping("/register")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public UserEntityDTO register(@NotNull CreateUserRequest request) {
@@ -33,7 +33,7 @@ public class AccountController {
     }
 
     @Operation(
-            summary = "login to system.")
+            summary = "LOGIN")
     @PostMapping("/login")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public ResponseEntity<String> login(@NotNull @NotBlank String username, @NotNull String password) {
@@ -41,13 +41,14 @@ public class AccountController {
 
     }
 
+    @Operation(summary = "GET ME")
     @GetMapping
     public UserEntityDTO getMe() {
         return accountService.getMe();
     }
 
     @Operation(
-            summary = "changing password")
+            summary = "CHANGE PASSWORD")
     @PutMapping("/changePassword")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
@@ -57,7 +58,7 @@ public class AccountController {
 
 
     @Operation(
-            summary = "sends a new password to user's mail adress")
+            summary = "FORGOT PASSWORD")
     @PostMapping("/forgotPassword")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 

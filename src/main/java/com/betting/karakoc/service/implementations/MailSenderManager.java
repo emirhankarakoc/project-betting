@@ -6,7 +6,6 @@ import com.betting.karakoc.model.real.UserEntity;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.abstracts.MailSenderService;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.mail.SimpleMailMessage;
@@ -29,7 +28,7 @@ public class MailSenderManager implements MailSenderService {
     private final SecurityContextUtil securityContextUtil;
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
-    Random random = new Random();
+
     private final BetSummaryManager betSummaryManager;
 
     public String mailSenderByBetRoundId( Long betroundId) {
@@ -72,6 +71,7 @@ public class MailSenderManager implements MailSenderService {
 
     public String forgotPassword( String mail) {
         Optional<UserEntity> user = userRepository.findByUsername(mail);
+        Random random = new Random();
         if (user.isPresent()) {
 
             user.get().setPassword("" + random.nextDouble(9999999));

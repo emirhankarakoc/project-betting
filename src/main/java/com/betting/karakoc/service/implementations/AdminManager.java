@@ -1,19 +1,17 @@
 package com.betting.karakoc.service.implementations;
 
 import com.betting.karakoc.exceptions.general.BadRequestException;
+import com.betting.karakoc.exceptions.general.NotfoundException;
 import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.model.dtos.GameEntityDTO;
 import com.betting.karakoc.model.enums.BetStatus;
-import com.betting.karakoc.model.real.BetRoundEntity;
-import com.betting.karakoc.model.real.GameEntity;
-import com.betting.karakoc.model.real.UserEntity;
+import com.betting.karakoc.model.real.*;
 import com.betting.karakoc.model.requests.CreateBetRoundRequest;
 import com.betting.karakoc.model.requests.CreateGameRequest;
 import com.betting.karakoc.model.requests.PutGameRequest;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.abstracts.AdminService;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.domain.Page;
@@ -30,6 +28,8 @@ import java.util.Optional;
 
 import static com.betting.karakoc.model.real.BetRoundEntity.*;
 import static com.betting.karakoc.model.real.GameEntity.*;
+import static com.betting.karakoc.model.real.UserBetEntity.isUserBetEmpty;
+import static com.betting.karakoc.model.real.UserBetRoundEntity.isUserBetRoundEmpty;
 
 @Data
 @Service
@@ -44,6 +44,7 @@ public class AdminManager implements AdminService {
     private final SecurityContextUtil securityContextUtil;
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
+    private final UserBetRepository userBetRepository;
 
     @Transactional
     public GameEntityDTO createGame( Long betroundId,  CreateGameRequest request,  int teamsSize) {
@@ -125,8 +126,82 @@ public class AdminManager implements AdminService {
 
 
     @Override
-    public BetRoundEntityDTO deleteBetRound( Long betroundId) {
-        //todo yapilacak.
-        return null;
+    @Transactional
+    public void deleteBetRound(Long betroundId) {
+        Optional<BetRoundEntity> betRound = betRoundRepository.findById(betroundId);
+        isBetRoundEmpty(betRound);
+        List<UserBetRoundEntity> userbetrounds = userBetRoundRepository.findByBetRoundEntityId(betroundId);
+        if (!userbetrounds.isEmpty()) {
+            for (int i = 0; i < userbetrounds.size(); i++) {
+                deleteUserBetRound(betroundId, userbetrounds.get(i).getId());
+            }
+        }
+        List<GameEntity> games = gameRepository.findAllByBetroundId(betroundId);
+        if (!games.isEmpty()) {
+            for (int i = 0; i < games.size(); i++) {
+                deleteGame(betroundId,games.get(i).getId());
+                betRound.get().getGames().remove(games.get(i));
+            }
+        }
+        betRoundRepository.save(betRound.get());
+    }
+
+    @Transactional
+    @Override
+    public void deleteGame(Long betroundId, Long gameId) {
+        Optional<BetRoundEntity> betRound = betRoundRepository.findById(betroundId);
+        isBetRoundEmpty(betRound);
+        Optional<GameEntity> game = gameRepository.findById(gameId);
+        isGameEmpty(game);
+        if (!game.get().getBetroundId().equals(betRound.get().getId()))
+            throw new NotfoundException("Betround id and game id is not matching.");
+        betRound.get().getGames().remove(game.get());
+
+        List<UserBetEntity> allBetsForThisGame = userBetRepository.findAllByGameEntityId(gameId);
+        for (int i = 0; i < allBetsForThisGame.size(); i++) {
+            UserBetEntity bet = allBetsForThisGame.get(i);
+            deleteBet(betroundId, bet.getUserBetRoundId(), bet.getId());
+        }
+        gameRepository.delete(game.get());
+        betRoundRepository.save(betRound.get());
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserBetRound(Long betroundId, Long userbetroundId) {
+        Optional<BetRoundEntity> betRound = betRoundRepository.findById(betroundId);
+        isBetRoundEmpty(betRound);
+        Optional<UserBetRoundEntity> userBetRound = userBetRoundRepository.findById(userbetroundId);
+        isUserBetRoundEmpty(userBetRound);
+        if (userBetRound.get().getBetRoundEntityId() != betRound.get().getId()) throw new NotfoundException("Betround id and Userbetround id is not matching.");
+
+        for (int i = 0; i < userBetRound.get().getUserBetList().size(); i++) {
+            UserBetEntity bet = userBetRound.get().getUserBetList().get(i);
+            isUserBetEmpty(Optional.ofNullable(bet));
+            deleteBet(betroundId, userbetroundId, bet.getId());
+            userBetRound.get().getUserBetList().remove(bet);
+        }
+        userBetRoundRepository.delete(userBetRound.get());
+
+
+    }
+
+    @Transactional
+    public void deleteBet(Long betroundId, Long userbetroundId, String betId) {
+        Optional<BetRoundEntity> betRound = betRoundRepository.findById(betroundId);
+        isBetRoundEmpty(betRound);
+        Optional<UserBetRoundEntity> userBetRound = userBetRoundRepository.findById(userbetroundId);
+        isUserBetRoundEmpty(userBetRound);
+
+        Optional<UserBetEntity> bet = userBetRepository.findById(betId);
+        isUserBetEmpty(bet);
+        if (!(bet.get().getUserBetRoundId() == userbetroundId && userBetRound.get().getBetRoundEntityId() == betroundId)) {
+            //eger hersey yolundaysa
+            userBetRound.get().getUserBetList().remove(bet.get());
+            userBetRepository.delete(bet.get());
+            userBetRoundRepository.save(userBetRound.get());
+        }
+
+
     }
 }

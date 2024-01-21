@@ -70,7 +70,7 @@ public class UserBetRoundEntity {
 
     }
 
-    public static void isUserBetRoundIsEmpty(Optional<UserBetRoundEntity> userBetRound) {
+    public static void isUserBetRoundEmpty(Optional<UserBetRoundEntity> userBetRound) {
         if (userBetRound.isEmpty()) throw new NotfoundException("Invalid User Bet Round Id.");
     }
 }

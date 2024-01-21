@@ -36,7 +36,7 @@ public class BetroundController {
     private final BetSummaryService betSummaryService;
 
 
-    @Operation(summary = "creating a new betround")
+    @Operation(summary = "CREATE BETROUND")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @PostMapping
     @OnlyAdmin
@@ -63,7 +63,7 @@ public class BetroundController {
 
         }*/
     @Operation(
-            summary = "change the match score with gameId")
+            summary = "PUT GAME")
     @PutMapping("/{betroundId}/games/{gameId}")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @OnlyAdmin
@@ -75,7 +75,7 @@ public class BetroundController {
     }
 
     @Operation(
-            summary = "brings betrounds which status is ENDED")
+            summary = "GET ALL ENDED BETROUNDS")
     @GetMapping("/filter/ended")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public List<BetRoundEntityDTO> getEndedBetRounds() {
@@ -83,7 +83,7 @@ public class BetroundController {
     }
 
     @Operation(
-            summary = "brings betrounds which status is PLANNED")
+            summary = "GET ALL PLANNED BETROUNDS")
 
     @GetMapping("/filter/planned")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
@@ -93,7 +93,7 @@ public class BetroundController {
     }
 
     @Operation(
-            summary = "brings all CREATED betrounds, after adding static game count(in main class), betrounds status automaticly changes to PLANNED\nso this method just gives \"NOT FINISHED YET betrounds\"")
+            summary = "GET ALL CREATED BETROUNDS")
 
     @GetMapping("/filter/created")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
@@ -103,7 +103,7 @@ public class BetroundController {
     }
 
     @Operation(
-            summary = "creating an userbetround for given betroundId")
+            summary = "CREATE USERBETROUND")
 
     @PostMapping("/{betRoundId}/userbetrounds")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
@@ -115,7 +115,7 @@ public class BetroundController {
 
 
     @Operation(
-            summary = "after all bets, finishes the betrounds manually.")
+            summary = "END BETROUND")
     @PutMapping("{betroundId}/end")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @OnlyAdmin
@@ -125,7 +125,7 @@ public class BetroundController {
     }
 
     @Operation(
-            summary = "sends e-username to all users participating in this betround")
+            summary = "FINISH BETROUND")
     @PutMapping("{betroundId}/finish")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @OnlyAdmin
@@ -134,7 +134,7 @@ public class BetroundController {
         return mailSenderService.mailSenderByBetRoundId(betroundId);
     }
 
-    @Operation(summary = "creating a game for given betround")
+    @Operation(summary = "CREATE GAME")
     @PostMapping("/{betroundId}/games")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @OnlyAdmin
@@ -145,7 +145,7 @@ public class BetroundController {
         return adminService.createGame(betroundId, request, teamsSize);
     }
 
-    @Operation(summary = "brings all userbets for given userbetrounds id")
+    @Operation(summary = "GET ALL USERBETS")
     @GetMapping("/{betroundId}/userbetrounds/{userbetRoundId}/bets")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @OnlyAdmin
@@ -164,4 +164,32 @@ public class BetroundController {
                                     Long betTeamId) {
         return userService.creteUserBet(betroundId, userbetroundId, gameId, betTeamId);
     }
+
+@Operation(summary = "DELETE BETROUND")
+    @DeleteMapping("{betroundId}")
+    public void deleteBetround(@PathVariable @NotNull @NotBlank @NotEmpty Long betroundId){
+        adminService.deleteBetRound(betroundId);
+    }
+    @Operation(summary = "DELETE GAME")
+
+    @DeleteMapping("{betroundId}/games/{gameId}")
+    public void deleteGame(@PathVariable@NotNull @NotBlank @NotEmpty Long betroundId,@PathVariable @NotNull @NotBlank @NotEmpty Long gameId){
+        adminService.deleteGame(betroundId,gameId);
+    }
+    @Operation(summary = "DELETE USERBETROUND")
+
+    @DeleteMapping("{betroundId}/userbetrounds/{userbetroundId}")
+    public void deleteUserBetround(@PathVariable @NotNull @NotBlank @NotEmpty Long betroundId,@PathVariable @NotNull @NotBlank @NotEmpty Long userbetroundId){
+        adminService.deleteUserBetRound(betroundId,userbetroundId);
+    }
+    @Operation(summary = "DELETE BET")
+
+    @DeleteMapping("{betroundId}/userbetrounds/{userbetroundId}/bets/{betId}")
+    public void deleteBet(@PathVariable @NotNull @NotBlank @NotEmpty Long betroundId,@PathVariable @NotNull @NotBlank @NotEmpty Long userbetroundId, @PathVariable @NotNull @NotBlank @NotEmpty String betId){
+        adminService.deleteBet(betroundId,userbetroundId,betId);
+    }
+
+
+
+
 }

@@ -28,6 +28,12 @@ public interface AdminService {
 */
 
 
-    BetRoundEntityDTO deleteBetRound(Long betroundId);
+    void deleteBetRound(Long betroundId);
 
-}
+    void deleteGame(Long betroundId, Long gameId);
+
+    void deleteUserBetRound(Long betroundId, Long userbetroundId);
+     void deleteBet(Long betroundId, Long userbetroundId, String betId);
+
+
+    }
