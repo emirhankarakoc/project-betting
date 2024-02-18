@@ -39,7 +39,6 @@ public class BetroundController {
     @Operation(summary = "CREATE BETROUND")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @PostMapping
-    @OnlyAdmin
     public BetRoundEntityDTO postBetRound(@RequestBody @NotNull @NotBlank @NotEmpty
                                           CreateBetRoundRequest request) {
         return adminService.createBetRound(request);
@@ -66,7 +65,6 @@ public class BetroundController {
             summary = "PUT GAME")
     @PutMapping("/{betroundId}/games/{gameId}")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
     public GameEntityDTO putGame(@PathVariable @NotNull @NotBlank @NotEmpty
                                  Long betroundId, @PathVariable @NotNull @NotBlank @NotEmpty
                                  Long gameId, @RequestBody @NotNull @NotBlank @NotEmpty
@@ -137,12 +135,8 @@ public class BetroundController {
     @Operation(summary = "CREATE GAME")
     @PostMapping("/{betroundId}/games")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public GameEntityDTO createGame(@PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long betroundId, @RequestBody @NotNull @NotBlank @NotEmpty
-                                    CreateGameRequest request, @NotNull @NotBlank @NotEmpty
-                                    @RequestParam int teamsSize) {
-        return adminService.createGame(betroundId, request, teamsSize);
+    public GameEntityDTO createGame(CreateGameRequest request) {
+        return adminService.createGame(request);
     }
 
     @Operation(summary = "GET ALL USERBETS")

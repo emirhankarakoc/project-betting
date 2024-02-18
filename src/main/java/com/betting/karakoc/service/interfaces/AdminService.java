@@ -15,7 +15,7 @@ public interface AdminService {
 
     BetRoundEntityDTO createBetRound(CreateBetRoundRequest request);
 
-    GameEntityDTO createGame(Long betroundId, CreateGameRequest request, int teamsSize);
+    GameEntityDTO createGame(CreateGameRequest request);
 
     List<BetRoundEntityDTO> getCreatedBetRounds();
 

@@ -6,7 +6,6 @@ import com.betting.karakoc.models.real.GameEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class BetRoundEntityDTO {
     private LocalDate createdDateTime;
     private LocalDate updatedDateTime;
     private String title;
-    private LocalDateTime playDateTime;
+    private LocalDate playDateTime;
     private BetStatus status;
     private List<GameEntity> games = new ArrayList<>();
 }

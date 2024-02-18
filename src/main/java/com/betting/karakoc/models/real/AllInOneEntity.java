@@ -10,9 +10,9 @@ import lombok.Data;
 public class AllInOneEntity {
     @NotNull @NotBlank @NotEmpty
     BetRoundEntity betRound;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull @NotBlank @NotEmpty
     UserBetRoundEntity userBetRound;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull @NotBlank @NotEmpty
     UserEntity user;
     String message;
 }

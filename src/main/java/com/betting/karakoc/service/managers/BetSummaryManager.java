@@ -4,11 +4,9 @@ import com.betting.karakoc.exceptions.general.NotfoundException;
 import com.betting.karakoc.models.dtos.UserBetEntityDTO;
 import com.betting.karakoc.models.real.*;
 import com.betting.karakoc.repository.*;
-import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.interfaces.BetSummaryService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,12 +29,8 @@ public class BetSummaryManager implements BetSummaryService {
     private final UserEntityRepository userRepository;
     private final BetRoundEntityRepository betRepository;
     private final UserBetRoundRepository userBetRoundRepository;
-
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
-    private final AuthenticationManager authenticationManager;
-    private final SecurityContextUtil securityContextUtil;
-
 
     public List<UserBetEntityDTO> getAllBetsByGame( long userbetRoundId,  long betroundId) {
         Optional<UserBetRoundEntity> userBetRound = userBetRoundRepository.findById(userbetRoundId);

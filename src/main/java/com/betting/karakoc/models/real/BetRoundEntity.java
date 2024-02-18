@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,16 +28,26 @@ public class BetRoundEntity {
     @NotBlank
     @NotEmpty
     private Long id;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private LocalDate createdDateTime;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private LocalDate updatedDateTime;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private String title;
-    @NotNull@NotBlank@NotEmpty
-    private LocalDateTime playDateTime;
+    @NotNull
+    @NotBlank
+    @NotEmpty
+    private LocalDate playDateTime;
     @Enumerated
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private BetStatus betStatus;
     @OneToMany
     @JoinColumn(name = "betroundId")
@@ -57,22 +66,20 @@ public class BetRoundEntity {
 
     }
 
-    public static void isBetroundsGameSizeLowerThanXX(BetRoundEntity betRound) {
-        if (betRound.getGames().size() == GAME_MAX_COUNT)
-            throw new BadRequestException("Cant add, game count must be " + GAME_MAX_COUNT + ".");
+    public static void isBetroundsGameSizeEqualsEnvironmentVariable(BetRoundEntity betRound, int maxGameCounter) {
+        if (betRound.getGames().size() == maxGameCounter)
+            throw new BadRequestException("Cant add, game count must be " + maxGameCounter + ".");
 
     }
 
-    public static void setPlannedIfGamesSizeIsXX(BetRoundEntity betRound) {
-        if (betRound.getGames().size() == GAME_MAX_COUNT) {
+    public static BetRoundEntity setPlannedIfGamesSizeIsEnvironmentVariable(BetRoundEntity betRound, int maxGameCounter) {
+        if (betRound.getGames().size() == maxGameCounter) {
             betRound.setBetStatus(BetStatus.PLANNED);
+            return betRound;
         }
+        return betRound;
     }
 
-    public static void isPlayDatePast(LocalDateTime date) {
-        if (date.isBefore(LocalDateTime.now()))
-            throw new BadRequestException("You cant add a betround which have past playdate.");
-    }
 
     public static void isBetRoundsGameIsNotXX(BetRoundEntity betRound) {
         if (betRound.getGames().size() != GAME_MAX_COUNT)
@@ -115,5 +122,4 @@ public class BetRoundEntity {
 
         return dto;
     }
-
 }

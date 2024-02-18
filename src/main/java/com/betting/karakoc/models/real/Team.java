@@ -24,9 +24,13 @@ public class Team {
     @NotBlank
     @NotEmpty
     private Long id;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private String name;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private int score;
 
 

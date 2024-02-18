@@ -4,12 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-
-public class CreateUserBetRoundRequest {
-
+public class GetCreatedBetRoundsRequest {
     @NotBlank
-    private Long betRoundEntityId;
-    @NotBlank
-    private String userToken;
-
+    private String adminToken;
 }

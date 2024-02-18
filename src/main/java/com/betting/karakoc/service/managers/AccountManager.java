@@ -6,84 +6,61 @@ import com.betting.karakoc.models.enums.UserRole;
 import com.betting.karakoc.models.real.UserEntity;
 import com.betting.karakoc.models.requests.CreateUserRequest;
 import com.betting.karakoc.repository.UserEntityRepository;
-import com.betting.karakoc.security.SecurityContextUtil;
-import com.betting.karakoc.security.TokenManager;
 import com.betting.karakoc.service.interfaces.AccountService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
-import static com.betting.karakoc.models.real.UserEntity.userToDto;
-import static com.betting.karakoc.models.real.UserEntity.validateUsername;
+import static com.betting.karakoc.models.real.UserEntity.*;
 
 @Service
 @AllArgsConstructor
 public class AccountManager implements AccountService {
     private final UserEntityRepository repository;
-    private final TokenManager tokenManager;
-    private final AuthenticationManager authenticationManager;
-    private final SecurityContextUtil securityContextUtil;
 
 
     public UserEntityDTO register(CreateUserRequest request) {
 
-        String username = request.getUsername();
-        int specialCharCount = validateUsername(username);
-
-
-        if (specialCharCount != 2 && username.length() < 7)
-            throw new BadRequestException("Invalid username type.\nExample: example@example.com\nThe mail adress must be 8 digits or more.");
-
+        if (repository.existsByUsername(request.getUsername()))
+            throw new BadRequestException("This mail is already taken.");
+        validateUsername(request.getUsername());
         if (repository.findAll().isEmpty()) {
-            UserEntity user = new UserEntity();
-            user.setId(UUID.randomUUID().toString());
-            user.setUsername("jessuothebusiness@gmail.com");
-            user.setPassword("admin");
-            user.setRole(UserRole.ROLE_ADMIN);
+            UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), "KARAKOC", "KARAKOC", "ADMIN", "1", UserRole.ROLE_ADMIN, "1");
             repository.save(user);
-            UserEntity user2 = new UserEntity();
-            user2.setId(UUID.randomUUID().toString());
-            user2.setUsername("user");
-            user2.setPassword("user");
-            user2.setRole(UserRole.ROLE_USER);
+            UserEntity user2 = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), "KARAKOC", "KARAKOC", "USER", "1", UserRole.ROLE_USER, "2");
             repository.save(user2);
         }
-        if (repository.existsByusername(request.getUsername()))
-            throw new BadRequestException("This mail is already taken.");
-        if (!request.getPassword().equals(request.getRepeatPassword()))
-            throw new BadRequestException("Password isn't matching.");
-        // kimse yoksa admin ekle, username ayniysa ekleme, sifreler eslesmiyorsa olusturma.
-        UserEntity dto = new UserEntity();
-        dto.setId(UUID.randomUUID().toString());
-        dto.setPassword(request.getPassword());
-        dto.setFirstname(request.getFirstname());
-        dto.setLastname(request.getLastname());
-        dto.setUsername(request.getUsername());
-        dto.setRole(UserRole.ROLE_USER);
-        dto.setCreateddatetime(LocalDate.now());
-        dto.setUpdatedDateTime(LocalDate.now());
-        repository.save(dto);
-        UserEntityDTO response = userToDto(dto);
-        response.setMessage("CREATED SUCCESFULLY\n\n\n");
-        response.setToken(tokenManager.generateToken(username));
+        UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), request.getFirstname(), request.getLastname(), request.getUsername(), passwordCrypter(request.getPassword()), UserRole.ROLE_USER, UUID.randomUUID().toString());
+        repository.save(user);
+        UserEntityDTO response = userToDto(user);
+        response.setPassword(request.getPassword());
+        response.setMessage("Your account is created successfully. Welcome MR/MRS. " + user.getFirstname());
+        response.setToken(user.getToken());
         return response;
     }
 
+    //  returns token
+    public String login(String username, String password) {
+        Optional<UserEntity> user = repository.findByUsername(username);
 
-    public String login(String mail, String password) {
-        //token doncek. hosgeldin diyecek.
+        //  if password is correct, return token.
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
 
+            return user.get().getToken();
+        }
+        // if not, return exception.
+        else {
+
+            throw new BadRequestException("Username or password is wrong.");
+        }
     }
 
     public UserEntityDTO getMe(String token) {
-       // UserEntity user = securityContextUtil.getCurrentUser();
-        //return userToDto(user);
-        return new UserEntityDTO();
+        Optional<UserEntity> user = repository.findByToken(token);
+        return userToDto(user.get());
     }
 
 

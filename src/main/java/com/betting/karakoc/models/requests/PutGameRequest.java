@@ -3,7 +3,6 @@ package com.betting.karakoc.models.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +11,13 @@ import java.util.List;
 public class PutGameRequest {
 
     @NotEmpty
-    public List<Integer> scores;
+    private List<Integer> scores;
+    @NotBlank
+    private String adminToken;
+    @NotBlank
+    private Long betRoundId;
+    @NotBlank
+    private Long gameId;
 
 
 }

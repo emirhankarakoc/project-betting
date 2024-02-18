@@ -27,9 +27,13 @@ public class UserBetEntity {
     @NotBlank
     @NotEmpty
     private String id;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private Long userBetRoundId;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private Long gameEntityId;
     @NotNull@NotBlank@NotEmpty
     private Long betTeamId;

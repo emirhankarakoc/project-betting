@@ -7,32 +7,26 @@ import com.betting.karakoc.models.dtos.GameEntityDTO;
 import com.betting.karakoc.models.enums.GameType;
 import com.betting.karakoc.models.requests.CreateGameRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Data
 public class GameEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @NotBlank
-    @NotEmpty
     private Long id;
-    @NotNull@NotBlank@NotEmpty
     private Long betroundId;
 
     @OneToMany
     @JoinColumn(name = "teamId")
-    @NotNull@NotBlank@NotEmpty
     private List<Team> teams = new ArrayList<>();
 
     @Enumerated
-    @NotNull@NotBlank@NotEmpty
     private GameType gameType;
 
 
@@ -48,13 +42,14 @@ public class GameEntity {
         if (game.isEmpty()) throw new NotfoundException("Invalid Game Id.");
     }
 
-    public static GameEntity createGameBuilder(BetRoundEntity betRound, CreateGameRequest request, int teamsSize) {
-        isTeamsSizeEqualsToParam(request.getTeams().size(), teamsSize);
+    public static GameEntity createGameBuilder(BetRoundEntity betRound, CreateGameRequest request) {
+        //maybe admin is drunk. why not?
+        isTeamsSizeEqualsToParam(request.getTeams().size(), request.getTeamsSize());
 
         GameEntity game = new GameEntity();
         game.setBetroundId(betRound.getId());
         game.setGameType(request.getGameType());
-        for (int i = 0; i < teamsSize; i++) {
+        for (int i = 0; i < request.getTeamsSize(); i++) {
             Team team = new Team();
             team.setName(request.getTeams().get(i));
             team.setScore(0);

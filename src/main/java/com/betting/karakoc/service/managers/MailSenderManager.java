@@ -4,7 +4,6 @@ import com.betting.karakoc.exceptions.general.BadRequestException;
 import com.betting.karakoc.models.real.UserBetRoundEntity;
 import com.betting.karakoc.models.real.UserEntity;
 import com.betting.karakoc.repository.*;
-import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.interfaces.MailSenderService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +24,6 @@ public class MailSenderManager implements MailSenderService {
     private final BetRoundEntityRepository betRepository;
     private final UserBetRoundRepository userBetRoundRepository;
     private final JavaMailSender mailSender;
-    private final SecurityContextUtil securityContextUtil;
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
 

@@ -23,9 +23,13 @@ public class UserBetRoundEntity {
     @NotBlank
     @NotEmpty
     private Long id;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private LocalDate createdDateTime;
-    @NotNull@NotBlank@NotEmpty
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private LocalDate updatedDateTime;
     @NotNull@NotBlank@NotEmpty
     private String userEntityId;

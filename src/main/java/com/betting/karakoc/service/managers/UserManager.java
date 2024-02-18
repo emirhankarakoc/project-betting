@@ -9,7 +9,6 @@ import com.betting.karakoc.models.dtos.UserEntityDTO;
 import com.betting.karakoc.models.enums.BetStatus;
 import com.betting.karakoc.models.real.*;
 import com.betting.karakoc.repository.*;
-import com.betting.karakoc.security.SecurityContextUtil;
 import com.betting.karakoc.service.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,7 +42,6 @@ public class UserManager implements UserService {
     private final JavaMailSender mailSender;
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
-    private final SecurityContextUtil securityContextUtil;
     private final TeamRepository teamRepository;
 
     public List<BetRoundEntityDTO> getPlannedBetRounds() {
