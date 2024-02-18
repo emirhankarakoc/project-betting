@@ -1,6 +1,6 @@
 package com.betting.karakoc.repository;
 
-import com.betting.karakoc.model.real.UserEntity;
+import com.betting.karakoc.models.real.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

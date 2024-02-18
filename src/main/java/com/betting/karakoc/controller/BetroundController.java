@@ -1,19 +1,19 @@
 package com.betting.karakoc.controller;
 
 
-import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
-import com.betting.karakoc.model.dtos.GameEntityDTO;
-import com.betting.karakoc.model.dtos.UserBetEntityDTO;
-import com.betting.karakoc.model.dtos.UserBetRoundEntityDTO;
-import com.betting.karakoc.model.requests.CreateBetRoundRequest;
-import com.betting.karakoc.model.requests.CreateGameRequest;
-import com.betting.karakoc.model.requests.PutGameRequest;
+import com.betting.karakoc.models.dtos.BetRoundEntityDTO;
+import com.betting.karakoc.models.dtos.GameEntityDTO;
+import com.betting.karakoc.models.dtos.UserBetEntityDTO;
+import com.betting.karakoc.models.dtos.UserBetRoundEntityDTO;
+import com.betting.karakoc.models.requests.CreateBetRoundRequest;
+import com.betting.karakoc.models.requests.CreateGameRequest;
+import com.betting.karakoc.models.requests.PutGameRequest;
 import com.betting.karakoc.security.annotations.IsAuthentificated;
 import com.betting.karakoc.security.annotations.OnlyAdmin;
-import com.betting.karakoc.service.abstracts.AdminService;
-import com.betting.karakoc.service.abstracts.BetSummaryService;
-import com.betting.karakoc.service.abstracts.MailSenderService;
-import com.betting.karakoc.service.abstracts.UserService;
+import com.betting.karakoc.service.interfaces.AdminService;
+import com.betting.karakoc.service.interfaces.BetSummaryService;
+import com.betting.karakoc.service.interfaces.MailSenderService;
+import com.betting.karakoc.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
