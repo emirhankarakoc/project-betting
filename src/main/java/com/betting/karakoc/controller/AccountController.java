@@ -1,10 +1,12 @@
 package com.betting.karakoc.controller;
 
-import com.betting.karakoc.model.dtos.UserEntityDTO;
-import com.betting.karakoc.model.requests.CreateUserRequest;
-import com.betting.karakoc.service.abstracts.AccountService;
-import com.betting.karakoc.service.abstracts.MailSenderService;
-import com.betting.karakoc.service.abstracts.UserService;
+import com.betting.karakoc.models.dtos.UserEntityDTO;
+import com.betting.karakoc.models.requests.ChangePasswordRequest;
+import com.betting.karakoc.models.requests.CreateUserRequest;
+import com.betting.karakoc.models.requests.LoginRequest;
+import com.betting.karakoc.service.interfaces.AccountService;
+import com.betting.karakoc.service.interfaces.MailSenderService;
+import com.betting.karakoc.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +30,7 @@ public class AccountController {
             summary = "REGISTER")
     @PostMapping("/register")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public UserEntityDTO register(@NotNull CreateUserRequest request) {
+    public UserEntityDTO register(@RequestBody CreateUserRequest request) {
         return accountService.register(request);
     }
 
@@ -36,15 +38,15 @@ public class AccountController {
             summary = "LOGIN")
     @PostMapping("/login")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public ResponseEntity<String> login(@NotNull @NotBlank String username, @NotNull String password) {
-        return accountService.login(username, password);
+    public String login(@RequestBody LoginRequest request) {
+        return accountService.login(request.getUsername(), request.getPassword());
 
     }
 
     @Operation(summary = "GET ME")
     @GetMapping
-    public UserEntityDTO getMe() {
-        return accountService.getMe();
+    public UserEntityDTO getMe(String token) {
+        return accountService.getMe(token);
     }
 
     @Operation(
@@ -52,8 +54,8 @@ public class AccountController {
     @PutMapping("/changePassword")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserEntityDTO changePassword(@NotNull String username, @NotNull String password,@NotNull String newPassword) {
-        return userService.changePassword(username, password, newPassword);
+    public UserEntityDTO changePassword(@RequestBody ChangePasswordRequest request) {
+        return userService.changePassword(request);
     }
 
 

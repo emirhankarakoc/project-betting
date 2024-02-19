@@ -1,7 +1,7 @@
 package com.betting.karakoc.repository;
 
 
-import com.betting.karakoc.model.real.UserBetRoundEntity;
+import com.betting.karakoc.models.real.UserBetRoundEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

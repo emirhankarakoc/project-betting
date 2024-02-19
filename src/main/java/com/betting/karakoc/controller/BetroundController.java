@@ -1,19 +1,15 @@
 package com.betting.karakoc.controller;
 
 
-import com.betting.karakoc.model.dtos.BetRoundEntityDTO;
-import com.betting.karakoc.model.dtos.GameEntityDTO;
-import com.betting.karakoc.model.dtos.UserBetEntityDTO;
-import com.betting.karakoc.model.dtos.UserBetRoundEntityDTO;
-import com.betting.karakoc.model.requests.CreateBetRoundRequest;
-import com.betting.karakoc.model.requests.CreateGameRequest;
-import com.betting.karakoc.model.requests.PutGameRequest;
-import com.betting.karakoc.security.annotations.IsAuthentificated;
-import com.betting.karakoc.security.annotations.OnlyAdmin;
-import com.betting.karakoc.service.abstracts.AdminService;
-import com.betting.karakoc.service.abstracts.BetSummaryService;
-import com.betting.karakoc.service.abstracts.MailSenderService;
-import com.betting.karakoc.service.abstracts.UserService;
+import com.betting.karakoc.models.dtos.BetRoundEntityDTO;
+import com.betting.karakoc.models.dtos.GameEntityDTO;
+import com.betting.karakoc.models.dtos.UserBetEntityDTO;
+import com.betting.karakoc.models.dtos.UserBetRoundEntityDTO;
+import com.betting.karakoc.models.requests.*;
+import com.betting.karakoc.service.interfaces.AdminService;
+import com.betting.karakoc.service.interfaces.BetSummaryService;
+import com.betting.karakoc.service.interfaces.MailSenderService;
+import com.betting.karakoc.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -38,8 +34,7 @@ public class BetroundController {
 
     @Operation(summary = "CREATE BETROUND")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @PostMapping
-    @OnlyAdmin
+    @PostMapping("/createBetRound")
     public BetRoundEntityDTO postBetRound(@RequestBody @NotNull @NotBlank @NotEmpty
                                           CreateBetRoundRequest request) {
         return adminService.createBetRound(request);
@@ -64,129 +59,107 @@ public class BetroundController {
         }*/
     @Operation(
             summary = "PUT GAME")
-    @PutMapping("/{betroundId}/games/{gameId}")
+    @PutMapping("/putGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public GameEntityDTO putGame(@PathVariable @NotNull @NotBlank @NotEmpty
-                                 Long betroundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                 Long gameId, @RequestBody @NotNull @NotBlank @NotEmpty
-                                 PutGameRequest request) {
-        return adminService.putGame(betroundId, gameId, request);
+    public GameEntityDTO putGame(@RequestBody PutGameRequest request) {
+        return adminService.putGame(request);
     }
 
     @Operation(
             summary = "GET ALL ENDED BETROUNDS")
-    @GetMapping("/filter/ended")
+    @GetMapping("/getBetrounds/filter/ended")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public List<BetRoundEntityDTO> getEndedBetRounds() {
-        return userService.getEndedBetRounds();
+    public List<BetRoundEntityDTO> getEndedBetRounds(@RequestBody GetEndedBetRoundsRequest request) {
+        return userService.getEndedBetRounds( request);
     }
 
     @Operation(
             summary = "GET ALL PLANNED BETROUNDS")
 
-    @GetMapping("/filter/planned")
+    @GetMapping("/getBetrounds/filter/planned")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @IsAuthentificated
-    public List<BetRoundEntityDTO> getPlannedBetRounds() {
-        return userService.getPlannedBetRounds();
+    public List<BetRoundEntityDTO> getPlannedBetRounds(@RequestBody GetPlannedBetRoundsRequest request) {
+        return userService.getPlannedBetRounds(request);
     }
 
     @Operation(
             summary = "GET ALL CREATED BETROUNDS")
 
-    @GetMapping("/filter/created")
+    @GetMapping("/getBetrounds/filter/created")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public List<BetRoundEntityDTO> getCreatedBetRounds() {
-        return adminService.getCreatedBetRounds();
+    public List<BetRoundEntityDTO> getCreatedBetRounds(@RequestBody GetCreatedBetRoundsRequest request) {
+        return adminService.getCreatedBetRounds(request);
     }
 
     @Operation(
             summary = "CREATE USERBETROUND")
 
-    @PostMapping("/{betRoundId}/userbetrounds")
+    @PostMapping("/creteUserBetround")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserBetRoundEntityDTO createUserBetRound(@PathVariable @NotNull @NotBlank @NotEmpty
-                                                    Long betRoundId) {
-        return userService.createUserBetRound(betRoundId);
+    public UserBetRoundEntityDTO createUserBetRound(@RequestBody  CreateUserBetRoundRequest request) {
+        return userService.createUserBetRound(request);
     }
 
 
     @Operation(
             summary = "END BETROUND")
-    @PutMapping("{betroundId}/end")
+    @PutMapping("/endBetRound")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public BetRoundEntityDTO endBetRound(@PathVariable @NotNull @NotBlank @NotEmpty
-                                         Long betroundId) {
-        return adminService.endBetRound(betroundId);
+    public BetRoundEntityDTO endBetRound(@RequestBody EndBetRoundRequest request) {
+        return adminService.endBetRound(request);
     }
 
     @Operation(
             summary = "FINISH BETROUND")
-    @PutMapping("{betroundId}/finish")
+    @PutMapping("/finish")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public String mailSender(@PathVariable @NotNull @NotBlank @NotEmpty
-                             Long betroundId) {
-        return mailSenderService.mailSenderByBetRoundId(betroundId);
+    public String mailSender(@RequestBody MailSenderByBetRoundIdRequest request) {
+        return mailSenderService.mailSenderByBetRoundId(request);
     }
 
     @Operation(summary = "CREATE GAME")
-    @PostMapping("/{betroundId}/games")
+    @PostMapping("/createGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public GameEntityDTO createGame(@PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long betroundId, @RequestBody @NotNull @NotBlank @NotEmpty
-                                    CreateGameRequest request, @NotNull @NotBlank @NotEmpty
-                                    @RequestParam int teamsSize) {
-        return adminService.createGame(betroundId, request, teamsSize);
+    public GameEntityDTO createGame(CreateGameRequest request) {
+        return adminService.createGame(request);
     }
 
     @Operation(summary = "GET ALL USERBETS")
-    @GetMapping("/{betroundId}/userbetrounds/{userbetRoundId}/bets")
+    @GetMapping("/getAllBetsByGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @OnlyAdmin
-    public List<UserBetEntityDTO> getAllBetsByGame(@PathVariable @NotNull @NotBlank @NotEmpty
-                                                   Long userbetRoundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                                   Long betroundId) {
-        return betSummaryService.getAllBetsByGame(userbetRoundId, betroundId);
+    public List<UserBetEntityDTO> getAllBetsByGame(@RequestBody GetAllBetsByGameRequest request) {
+        return betSummaryService.getAllBetsByGame(request);
     }
 
 
-    @PostMapping("{betroundId}/userbetrounds/{userbetroundId}/games/{gameId}/bet")
-    public UserBetEntityDTO makeBet(@PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long betroundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long userbetroundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long gameId, @NotNull @NotBlank @NotEmpty
-                                    Long betTeamId) {
-        return userService.creteUserBet(betroundId, userbetroundId, gameId, betTeamId);
+    @PostMapping("/createUserBet")
+    public UserBetEntityDTO createUserBet(@RequestBody CreateBetRequest request) {
+        return userService.creteUserBet(request);
     }
 
-@Operation(summary = "DELETE BETROUND")
-    @DeleteMapping("{betroundId}")
-    public void deleteBetround(@PathVariable @NotNull @NotBlank @NotEmpty Long betroundId){
-        adminService.deleteBetRound(betroundId);
+    @Operation(summary = "DELETE BETROUND")
+    @DeleteMapping("/deletebetRound")
+    public void deleteBetRound(@RequestBody DeleteBetRoundRequest request){
+        adminService.deleteBetRound(request);
     }
     @Operation(summary = "DELETE GAME")
 
-    @DeleteMapping("{betroundId}/games/{gameId}")
-    public void deleteGame(@PathVariable@NotNull @NotBlank @NotEmpty Long betroundId,@PathVariable @NotNull @NotBlank @NotEmpty Long gameId){
-        adminService.deleteGame(betroundId,gameId);
+    @DeleteMapping("/deleteGame")
+    public void deleteGame(@RequestBody DeleteGameRequest request){
+        adminService.deleteGame(request);
     }
     @Operation(summary = "DELETE USERBETROUND")
 
-    @DeleteMapping("{betroundId}/userbetrounds/{userbetroundId}")
-    public void deleteUserBetround(@PathVariable @NotNull @NotBlank @NotEmpty Long betroundId,@PathVariable @NotNull @NotBlank @NotEmpty Long userbetroundId){
-        adminService.deleteUserBetRound(betroundId,userbetroundId);
+    @DeleteMapping("/deleteUserBetRound")
+    public void deleteUserBetRound(@RequestBody DeleteUserBetRoundRequest request){
+        adminService.deleteUserBetRound(request);
     }
     @Operation(summary = "DELETE BET")
 
-    @DeleteMapping("{betroundId}/userbetrounds/{userbetroundId}/bets/{betId}")
-    public void deleteBet(@PathVariable @NotNull @NotBlank @NotEmpty Long betroundId,@PathVariable @NotNull @NotBlank @NotEmpty Long userbetroundId, @PathVariable @NotNull @NotBlank @NotEmpty String betId){
-        adminService.deleteBet(betroundId,userbetroundId,betId);
+    @DeleteMapping("/deleteBet")
+    public void deleteBet(@RequestBody DeleteBetRequest request){
+        adminService.deleteBet(request);
     }
 
 
