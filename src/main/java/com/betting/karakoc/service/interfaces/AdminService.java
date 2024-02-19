@@ -13,7 +13,7 @@ public interface AdminService {
 
     BetRoundEntityDTO createBetRound(CreateBetRoundRequest request);
 
-    GameEntityDTO createGame(CreateGameRequest request);
+    GameEntityDTO createGame(CreateGameRequest request) throws InterruptedException;
 
     List<BetRoundEntityDTO> getCreatedBetRounds(GetCreatedBetRoundsRequest request);
 

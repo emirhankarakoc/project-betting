@@ -1,17 +1,19 @@
 package com.betting.karakoc.models.requests;
 
-
 import com.betting.karakoc.models.enums.GameType;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Builder
 public class CreateGameRequest {
 
     @NotNull
-    private Long betroundId;
+    private String betroundId;
 
     @NotNull
     @Min(1)
@@ -21,18 +23,16 @@ public class CreateGameRequest {
     @Size(min = 1)
     private List<String> teams;
 
-    @NotEmpty
+    @NotNull
     private GameType gameType;
 
     @NotBlank
     @Size(min = 1)
     private String adminToken;
 
-
     @AssertTrue
     private boolean listTeamSizeEqualsIntegerTeamsSize() {
         return teams != null && teamsSize.equals(teams.size());
     }
-
 
 }

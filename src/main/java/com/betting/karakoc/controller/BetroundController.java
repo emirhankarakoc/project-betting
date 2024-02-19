@@ -35,7 +35,7 @@ public class BetroundController {
     @Operation(summary = "CREATE BETROUND")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     @PostMapping("/createBetRound")
-    public BetRoundEntityDTO postBetRound(@RequestBody @NotNull @NotBlank @NotEmpty
+    public BetRoundEntityDTO postBetRound(@RequestBody
                                           CreateBetRoundRequest request) {
         return adminService.createBetRound(request);
     }
@@ -94,9 +94,8 @@ public class BetroundController {
     @Operation(
             summary = "CREATE USERBETROUND")
 
-    @PostMapping("/creteUserBetround")
+    @PostMapping("/createUserBetRound")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-
     public UserBetRoundEntityDTO createUserBetRound(@RequestBody  CreateUserBetRoundRequest request) {
         return userService.createUserBetRound(request);
     }
@@ -121,7 +120,7 @@ public class BetroundController {
     @Operation(summary = "CREATE GAME")
     @PostMapping("/createGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public GameEntityDTO createGame(CreateGameRequest request) {
+    public GameEntityDTO createGame(@RequestBody CreateGameRequest request) throws InterruptedException {
         return adminService.createGame(request);
     }
 

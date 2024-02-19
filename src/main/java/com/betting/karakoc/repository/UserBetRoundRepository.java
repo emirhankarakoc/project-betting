@@ -7,15 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserBetRoundRepository extends JpaRepository<UserBetRoundEntity, Long> {
+public interface UserBetRoundRepository extends JpaRepository<UserBetRoundEntity, String> {
 
-    UserBetRoundEntity findByUserEntityId(String userId);
+    Optional<UserBetRoundEntity> findByIdAndUserToken(String userBetRoundId, String userToken);
 
-    UserBetRoundEntity findByBetRoundEntityIdAndUserEntityId(Long betroundId, String userId);
-
-    Optional<UserBetRoundEntity> findByIdAndUserEntityId(Long userBetRoundId, String userId);
-
-    List<UserBetRoundEntity> findByBetRoundEntityId(Long betroundId);
-
-    List<UserBetRoundEntity> findAllByBetRoundEntityId(Long betroundId);
+    List<UserBetRoundEntity> findAllByBetRoundEntityId(String betroundId);
 }

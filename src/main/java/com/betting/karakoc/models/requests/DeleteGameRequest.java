@@ -9,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DeleteGameRequest {
     @NotBlank
-   private  Long betroundId;
-    @NotBlank private Long gameId;
+   private  String betroundId;
+    @NotBlank private String gameId;
     @NotBlank private String adminToken;
 
 }

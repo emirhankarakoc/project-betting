@@ -8,11 +8,11 @@ import java.util.List;
 
 @Data
 public class UserBetRoundEntityDTO {
-    private Long id;
+    private String id;
     private LocalDate createdDateTime;
     private LocalDate updatedDateTime;
-    private String userEntityId;
-    private Long betRoundEntityId;
+    private String userToken;
+    private String betRoundEntityId;
     private List<UserBetEntity> userBetList;
     private int correctGuessedMatchCount;
 }

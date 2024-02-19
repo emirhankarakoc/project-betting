@@ -18,9 +18,9 @@ import java.util.Optional;
 @Data
 public class GameEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long betroundId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+    private String betroundId;
 
     @OneToMany
     @JoinColumn(name = "teamId")

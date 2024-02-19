@@ -8,10 +8,7 @@ import lombok.Data;
 
 @Data
 public class AllInOneEntity {
-    @NotNull @NotBlank @NotEmpty
     BetRoundEntity betRound;
-    @NotNull @NotBlank @NotEmpty
     UserBetRoundEntity userBetRound;
-
     String message;
 }

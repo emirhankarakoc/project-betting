@@ -23,21 +23,12 @@ import static com.betting.karakoc.KarakocApplication.GAME_MAX_COUNT;
 public class UserBetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @NotNull
-    @NotBlank
-    @NotEmpty
     private String id;
-    @NotNull
-    @NotBlank
-    @NotEmpty
-    private Long userBetRoundId;
-    @NotNull
-    @NotBlank
-    @NotEmpty
-    private Long gameEntityId;
-    @NotNull@NotBlank@NotEmpty
-    private Long betTeamId;
-    @NotNull@NotBlank@NotEmpty
+
+    private String userBetRoundId;
+
+    private String gameEntityId;
+    private int betTeamId;
     private Boolean isGuessCorrect;
 
 

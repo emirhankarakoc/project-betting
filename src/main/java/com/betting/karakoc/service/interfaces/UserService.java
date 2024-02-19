@@ -17,7 +17,7 @@ public interface UserService {
 
     UserBetEntityDTO creteUserBet(CreateBetRequest request );
 
-    BetRoundEntityDTO getBetroundById(Long id);
+    BetRoundEntityDTO getBetroundById(String id);
 
     UserEntityDTO changePassword(ChangePasswordRequest request);
 

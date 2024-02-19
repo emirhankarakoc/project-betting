@@ -3,11 +3,14 @@ package com.betting.karakoc.models.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Builder
 public class PutGameRequest {
 
     @NotEmpty
@@ -15,9 +18,9 @@ public class PutGameRequest {
     @NotBlank
     private String adminToken;
     @NotBlank
-    private Long betRoundId;
+    private String betRoundId;
     @NotBlank
-    private Long gameId;
+    private String gameId;
 
 
 }

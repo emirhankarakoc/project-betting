@@ -20,17 +20,9 @@ import java.util.Optional;
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @NotBlank
-    @NotEmpty
-    private Long id;
-    @NotNull
-    @NotBlank
-    @NotEmpty
+
+    private int id;
     private String name;
-    @NotNull
-    @NotBlank
-    @NotEmpty
     private int score;
 
 
