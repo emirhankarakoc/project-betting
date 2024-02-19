@@ -3,6 +3,8 @@ package com.betting.karakoc.service.managers;
 import com.betting.karakoc.exceptions.general.BadRequestException;
 import com.betting.karakoc.models.real.UserBetRoundEntity;
 import com.betting.karakoc.models.real.UserEntity;
+import com.betting.karakoc.models.requests.MailSenderByBetRoundIdRequest;
+import com.betting.karakoc.models.requests.SummaryRequest;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.service.interfaces.MailSenderService;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static com.betting.karakoc.KarakocApplication.GAME_MAX_COUNT;
+import static com.betting.karakoc.models.real.UserEntity.onlyAdminValidation;
 
 
 @Service
@@ -29,17 +32,20 @@ public class MailSenderManager implements MailSenderService {
 
     private final BetSummaryManager betSummaryManager;
 
-    public String mailSenderByBetRoundId( Long betroundId) {
+    public String mailSenderByBetRoundId(MailSenderByBetRoundIdRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
+        // If token is not admin's token, throw exception. if not, welcome. keep continue please
+        onlyAdminValidation(user);
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("shopifyemirhan6@gmail.com");
         simpleMailMessage.setSubject("SPOR TOTO RESULT");
         StringBuilder response = new StringBuilder();
         List<UserBetRoundEntity> betroundsWillClose = new ArrayList<>();
-        List<UserBetRoundEntity> dummyList = userBetRoundRepository.findAllByBetRoundEntityId(betroundId);
+        List<UserBetRoundEntity> dummyList = userBetRoundRepository.findAllByBetRoundEntityId(request.getBetroundId());
         List<UserEntity> mailAdamlar = new ArrayList<>();
         for (UserBetRoundEntity userBetRoundEntity : dummyList) {
-            if (Objects.equals(userBetRoundEntity.getBetRoundEntityId(), betroundId) && userBetRoundEntity.getUserBetList().size() == GAME_MAX_COUNT) {
+            if (Objects.equals(userBetRoundEntity.getBetRoundEntityId(), request.getBetroundId()) && userBetRoundEntity.getUserBetList().size() == GAME_MAX_COUNT) {
                 betroundsWillClose.add(userBetRoundEntity);
             }
         }
@@ -53,7 +59,7 @@ public class MailSenderManager implements MailSenderService {
             Optional<UserEntity> usersWillAdded = userRepository.findById(userBetRound.getUserEntityId());
 
 
-            response.append(betSummaryManager.summary((userBetRound.getId()))).append("\n");
+            response.append(betSummaryManager.summary(new SummaryRequest(userBetRound.getId(), request.getAdminToken()))).append("\n");
             simpleMailMessage.setTo(usersWillAdded.get().getUsername());
             simpleMailMessage.setText(response.toString());
             try {
@@ -67,7 +73,7 @@ public class MailSenderManager implements MailSenderService {
 
     }
 
-    public String forgotPassword( String mail) {
+    public String forgotPassword(String mail) {
         Optional<UserEntity> user = userRepository.findByUsername(mail);
         Random random = new Random();
         if (user.isPresent()) {

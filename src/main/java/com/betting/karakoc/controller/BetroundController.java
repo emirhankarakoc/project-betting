@@ -6,8 +6,6 @@ import com.betting.karakoc.models.dtos.GameEntityDTO;
 import com.betting.karakoc.models.dtos.UserBetEntityDTO;
 import com.betting.karakoc.models.dtos.UserBetRoundEntityDTO;
 import com.betting.karakoc.models.requests.*;
-import com.betting.karakoc.security.annotations.IsAuthentificated;
-import com.betting.karakoc.security.annotations.OnlyAdmin;
 import com.betting.karakoc.service.interfaces.AdminService;
 import com.betting.karakoc.service.interfaces.BetSummaryService;
 import com.betting.karakoc.service.interfaces.MailSenderService;
@@ -36,7 +34,7 @@ public class BetroundController {
 
     @Operation(summary = "CREATE BETROUND")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    @PostMapping
+    @PostMapping("/createBetRound")
     public BetRoundEntityDTO postBetRound(@RequestBody @NotNull @NotBlank @NotEmpty
                                           CreateBetRoundRequest request) {
         return adminService.createBetRound(request);
@@ -71,8 +69,8 @@ public class BetroundController {
             summary = "GET ALL ENDED BETROUNDS")
     @GetMapping("/getBetrounds/filter/ended")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public List<BetRoundEntityDTO> getEndedBetRounds() {
-        return userService.getEndedBetRounds();
+    public List<BetRoundEntityDTO> getEndedBetRounds(@RequestBody GetEndedBetRoundsRequest request) {
+        return userService.getEndedBetRounds( request);
     }
 
     @Operation(
@@ -80,8 +78,8 @@ public class BetroundController {
 
     @GetMapping("/getBetrounds/filter/planned")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public List<BetRoundEntityDTO> getPlannedBetRounds() {
-        return userService.getPlannedBetRounds();
+    public List<BetRoundEntityDTO> getPlannedBetRounds(@RequestBody GetPlannedBetRoundsRequest request) {
+        return userService.getPlannedBetRounds(request);
     }
 
     @Operation(
@@ -96,12 +94,11 @@ public class BetroundController {
     @Operation(
             summary = "CREATE USERBETROUND")
 
-    @PostMapping("/{betRoundId}/userbetrounds")
+    @PostMapping("/creteUserBetround")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserBetRoundEntityDTO createUserBetRound(@PathVariable @NotNull @NotBlank @NotEmpty
-                                                    Long betRoundId) {
-        return userService.createUserBetRound(betRoundId);
+    public UserBetRoundEntityDTO createUserBetRound(@RequestBody  CreateUserBetRoundRequest request) {
+        return userService.createUserBetRound(request);
     }
 
 
@@ -115,40 +112,33 @@ public class BetroundController {
 
     @Operation(
             summary = "FINISH BETROUND")
-    @PutMapping("{betroundId}/finish")
+    @PutMapping("/finish")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public String mailSender(@PathVariable @NotNull @NotBlank @NotEmpty
-                             Long betroundId) {
-        return mailSenderService.mailSenderByBetRoundId(betroundId);
+    public String mailSender(@RequestBody MailSenderByBetRoundIdRequest request) {
+        return mailSenderService.mailSenderByBetRoundId(request);
     }
 
     @Operation(summary = "CREATE GAME")
-    @PostMapping("/{betroundId}/games")
+    @PostMapping("/createGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public GameEntityDTO createGame(CreateGameRequest request) {
         return adminService.createGame(request);
     }
 
     @Operation(summary = "GET ALL USERBETS")
-    @GetMapping("/{betroundId}/userbetrounds/{userbetRoundId}/bets")
+    @GetMapping("/getAllBetsByGame")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public List<UserBetEntityDTO> getAllBetsByGame(@PathVariable @NotNull @NotBlank @NotEmpty
-                                                   Long userbetRoundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                                   Long betroundId) {
-        return betSummaryService.getAllBetsByGame(userbetRoundId, betroundId);
+    public List<UserBetEntityDTO> getAllBetsByGame(@RequestBody GetAllBetsByGameRequest request) {
+        return betSummaryService.getAllBetsByGame(request);
     }
 
 
-    @PostMapping("{betroundId}/userbetrounds/{userbetroundId}/games/{gameId}/bet")
-    public UserBetEntityDTO makeBet(@PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long betroundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long userbetroundId, @PathVariable @NotNull @NotBlank @NotEmpty
-                                    Long gameId, @NotNull @NotBlank @NotEmpty
-                                    Long betTeamId) {
-        return userService.creteUserBet(betroundId, userbetroundId, gameId, betTeamId);
+    @PostMapping("/createUserBet")
+    public UserBetEntityDTO createUserBet(@RequestBody CreateBetRequest request) {
+        return userService.creteUserBet(request);
     }
 
-@Operation(summary = "DELETE BETROUND")
+    @Operation(summary = "DELETE BETROUND")
     @DeleteMapping("/deletebetRound")
     public void deleteBetRound(@RequestBody DeleteBetRoundRequest request){
         adminService.deleteBetRound(request);
@@ -169,7 +159,7 @@ public class BetroundController {
 
     @DeleteMapping("/deleteBet")
     public void deleteBet(@RequestBody DeleteBetRequest request){
-        adminService.deleteBet(request));
+        adminService.deleteBet(request);
     }
 
 

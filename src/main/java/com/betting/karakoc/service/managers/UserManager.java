@@ -8,8 +8,10 @@ import com.betting.karakoc.models.dtos.UserBetRoundEntityDTO;
 import com.betting.karakoc.models.dtos.UserEntityDTO;
 import com.betting.karakoc.models.enums.BetStatus;
 import com.betting.karakoc.models.real.*;
+import com.betting.karakoc.models.requests.*;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.service.interfaces.UserService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,7 +29,7 @@ import static com.betting.karakoc.models.real.Team.isTeamEmpty;
 import static com.betting.karakoc.models.real.UserBetEntity.isUserBetIsPresent;
 import static com.betting.karakoc.models.real.UserBetEntity.userBetToDto;
 import static com.betting.karakoc.models.real.UserBetRoundEntity.*;
-import static com.betting.karakoc.models.real.UserEntity.userToDto;
+import static com.betting.karakoc.models.real.UserEntity.*;
 
 @Data
 @Service
@@ -44,7 +46,11 @@ public class UserManager implements UserService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
 
-    public List<BetRoundEntityDTO> getPlannedBetRounds() {
+    public List<BetRoundEntityDTO> getPlannedBetRounds(GetPlannedBetRoundsRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
+        // If token is not valid token, throw exception. if not, welcome. keep continue please
+        realUserValidation(user);
+
         List<BetRoundEntity> betrounds = betRepository.findAll();
         List<BetRoundEntityDTO> responseList = new ArrayList<>();
         for (BetRoundEntity betRound : betrounds) {
@@ -56,7 +62,11 @@ public class UserManager implements UserService {
     }
 
 
-    public List<BetRoundEntityDTO> getEndedBetRounds() {
+    public List<BetRoundEntityDTO> getEndedBetRounds(GetEndedBetRoundsRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
+        // If token is not valid token, throw exception. if not, welcome. keep continue please
+        realUserValidation(user);
+
         List<BetRoundEntity> betrounds = betRepository.findAll();
         List<BetRoundEntityDTO> responseList = new ArrayList<>();
         for (BetRoundEntity betRound : betrounds) {
@@ -68,21 +78,35 @@ public class UserManager implements UserService {
 
     }
 
-    public UserBetRoundEntityDTO createUserBetRound( Long betRoundEntityId) {
+    public UserBetRoundEntityDTO createUserBetRound(CreateUserBetRoundRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
+        // If token is not valid token, throw exception. if not, welcome. keep continue please
+        realUserValidation(user);
 
-        Optional<BetRoundEntity> kontrol = betRepository.findById(betRoundEntityId);
+        Optional<BetRoundEntity> kontrol = betRepository.findById(request.getBetRoundEntityId());
         isBetRoundEmpty(kontrol);
         isBetRoundsGameIsNotXX(kontrol.get());
         isBetroundStatusCreatedOrEnded(kontrol.get());
 
-        UserBetRoundEntity userbet = userBetRoundRepository.save(createUserbetRound(betRoundEntityId, securityContextUtil.getCurrentUser()));
+        UserBetRoundEntity userbet = userBetRoundRepository.save(createUserbetRound(request.getBetRoundEntityId(), userRepository.findByToken(request.getUserToken()).get() ));
         return userBetRoundToDto(userbet);
     }
 
 
     @Transactional
-    public UserBetEntityDTO creteUserBet( Long betRoundId,  Long userBetRoundId,  Long gameId,  Long betTeamId) {
-        UserEntity user = securityContextUtil.getCurrentUser();
+    public UserBetEntityDTO creteUserBet(CreateBetRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
+        // If token is not valid token, throw exception. if not, welcome. keep continue please
+        realUserValidation(user);
+
+
+        // Actually I don't want this but I have to... for you...
+         Long betRoundId = request.getBetRoundId();
+         Long userBetRoundId = request.getUserBetRoundId();
+         Long gameId = request.getGameId();
+         Long betTeamId = request.getBetTeamId();
+
+
         Optional<BetRoundEntity> betRoundEntity = betRepository.findById(betRoundId);
         isBetRoundEmpty(betRoundEntity);
         isBetroundStatusCreatedOrEnded(betRoundEntity.get());
@@ -137,14 +161,16 @@ public class UserManager implements UserService {
 
     }
 
-    public UserEntityDTO changePassword( String username,  String password,  String newPassword) {
-        UserEntity user = securityContextUtil.getCurrentUser();
+    public UserEntityDTO changePassword(ChangePasswordRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
+        // If token is not valid token, throw exception. if not, welcome. keep continue please
+        realUserValidation(user);
 
-        if (!user.getPassword().equals(password))
+        if (!user.get().getPassword().equals(request.getPassword()))
             throw new BadRequestException("mail or password is not matching.");
-        user.setPassword(newPassword);
-        userRepository.save(user);
-        UserEntityDTO dto = userToDto(user);
+        user.get().setPassword(request.getPassword());
+        userRepository.save(user.get());
+        UserEntityDTO dto = userToDto(user.get());
         dto.setMessage("Password changed. Good bettings!!!");
         return dto;
 

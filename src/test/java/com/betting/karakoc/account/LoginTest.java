@@ -1,7 +1,6 @@
 package com.betting.karakoc.account;
 
 import com.betting.karakoc.repository.UserEntityRepository;
-import com.betting.karakoc.security.TokenManager;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @AllArgsConstructor
 public class LoginTest {
     private final UserEntityRepository userRepository;
-    private final TokenManager tokenManager;
     String pathLogin ="/account/login";
 
 

@@ -1,6 +1,7 @@
 package com.betting.karakoc.controller;
 
 import com.betting.karakoc.models.dtos.UserEntityDTO;
+import com.betting.karakoc.models.requests.ChangePasswordRequest;
 import com.betting.karakoc.models.requests.CreateUserRequest;
 import com.betting.karakoc.models.requests.LoginRequest;
 import com.betting.karakoc.service.interfaces.AccountService;
@@ -53,8 +54,8 @@ public class AccountController {
     @PutMapping("/changePassword")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
-    public UserEntityDTO changePassword(@NotNull String username, @NotNull String password,@NotNull String newPassword) {
-        return userService.changePassword(username, password, newPassword);
+    public UserEntityDTO changePassword(@RequestBody ChangePasswordRequest request) {
+        return userService.changePassword(request);
     }
 
 

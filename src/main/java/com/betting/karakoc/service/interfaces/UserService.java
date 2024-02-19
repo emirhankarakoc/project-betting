@@ -4,20 +4,21 @@ import com.betting.karakoc.models.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.models.dtos.UserBetEntityDTO;
 import com.betting.karakoc.models.dtos.UserBetRoundEntityDTO;
 import com.betting.karakoc.models.dtos.UserEntityDTO;
+import com.betting.karakoc.models.requests.*;
 
 import java.util.List;
 
 public interface UserService {
-    List<BetRoundEntityDTO> getEndedBetRounds();
+    List<BetRoundEntityDTO> getEndedBetRounds(GetEndedBetRoundsRequest request);
 
-    List<BetRoundEntityDTO> getPlannedBetRounds();
+    List<BetRoundEntityDTO> getPlannedBetRounds(GetPlannedBetRoundsRequest request);
 
-    UserBetRoundEntityDTO createUserBetRound(Long betRoundEntityId);
+    UserBetRoundEntityDTO createUserBetRound(CreateUserBetRoundRequest request);
 
-    UserBetEntityDTO creteUserBet(Long betRoundId, Long userBetRoundId, Long gameId, Long betTeamId);
+    UserBetEntityDTO creteUserBet(CreateBetRequest request );
 
     BetRoundEntityDTO getBetroundById(Long id);
 
-    UserEntityDTO changePassword(String username, String password, String newPassword);
+    UserEntityDTO changePassword(ChangePasswordRequest request);
 
 }

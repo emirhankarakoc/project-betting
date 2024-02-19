@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @EqualsAndHashCode(callSuper = false)
 public class RestException extends RuntimeException {
     @Getter
-    private HttpStatus httpStatus;
+    private  HttpStatus httpStatus;
 
     public RestException(String msg) {
         super(msg);

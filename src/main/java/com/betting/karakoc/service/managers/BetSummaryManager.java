@@ -3,6 +3,8 @@ package com.betting.karakoc.service.managers;
 import com.betting.karakoc.exceptions.general.NotfoundException;
 import com.betting.karakoc.models.dtos.UserBetEntityDTO;
 import com.betting.karakoc.models.real.*;
+import com.betting.karakoc.models.requests.GetAllBetsByGameRequest;
+import com.betting.karakoc.models.requests.SummaryRequest;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.service.interfaces.BetSummaryService;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import static com.betting.karakoc.models.real.GameEntity.summaryGameResult;
 import static com.betting.karakoc.models.real.UserBetEntity.userBetToDto;
 import static com.betting.karakoc.models.real.UserBetEntity.userBetValidation;
 import static com.betting.karakoc.models.real.UserBetRoundEntity.isUserBetRoundEmptyAndisUserPlayedForThisBetround;
+import static com.betting.karakoc.models.real.UserEntity.onlyAdminValidation;
 
 
 @Data
@@ -32,13 +35,18 @@ public class BetSummaryManager implements BetSummaryService {
     private final UserBetRepository userBetRepository;
     private final GameRepository gameRepository;
 
-    public List<UserBetEntityDTO> getAllBetsByGame( long userbetRoundId,  long betroundId) {
-        Optional<UserBetRoundEntity> userBetRound = userBetRoundRepository.findById(userbetRoundId);
-        if (userBetRound.isPresent() && userBetRound.get().getBetRoundEntityId() == betroundId) {
+    public List<UserBetEntityDTO> getAllBetsByGame(GetAllBetsByGameRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
+        // If token is not admin's token, throw exception. if not, welcome. keep continue please
+        onlyAdminValidation(user);
+
+
+        Optional<UserBetRoundEntity> userBetRound = userBetRoundRepository.findById(request.getUserbetRoundId());
+        if (userBetRound.isPresent() && userBetRound.get().getBetRoundEntityId() == request.getBetroundId()) {
             List<UserBetEntity> usersBetList = userBetRepository.findAll();
             List<UserBetEntityDTO> responseAllBets = new ArrayList<>();
             for (UserBetEntity bet : usersBetList) {
-                if ((bet.getUserBetRoundId()) == userbetRoundId) {
+                if ((bet.getUserBetRoundId()) == request.getUserbetRoundId()) {
                     responseAllBets.add(userBetToDto(bet));
                 }
             }
@@ -84,10 +92,12 @@ public class BetSummaryManager implements BetSummaryService {
         return all.getMesaj();
     }*/
 
-    public String summary( Long userBetRoundId) {
-        UserEntity user = securityContextUtil.getCurrentUser();
-        Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findByIdAndUserEntityId(userBetRoundId, user.getId());
-        isUserBetRoundEmptyAndisUserPlayedForThisBetround(userbetround, user);
+    public String summary(SummaryRequest request) {
+        Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
+        // If token is not admin's token, throw exception. if not, welcome. keep continue please
+        onlyAdminValidation(user);
+        Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findByIdAndUserEntityId(request.getUserBetRoundId(), user.get().getId());
+        isUserBetRoundEmptyAndisUserPlayedForThisBetround(userbetround, user.get());
         Optional<BetRoundEntity> betround = betRepository.findById(userbetround.get().getBetRoundEntityId());
         isBetRoundEmpty(betround);
         isBetroundEnded(betround);
@@ -101,7 +111,6 @@ public class BetSummaryManager implements BetSummaryService {
         all.setBetRound(betround.get());
         all.setUserBetRound(userbetround.get());
         all.getUserBetRound().setCorrectGuessedMatchCount(correctCounter);
-        all.setUser(user);
         all.setMessage("You know "+all.getUserBetRound().getCorrectGuessedMatchCount()+" of "+all.getUserBetRound().getUserBetList().size() +"games.");
         return all.getMessage();
 

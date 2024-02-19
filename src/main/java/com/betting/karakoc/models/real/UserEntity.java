@@ -74,4 +74,9 @@ public class UserEntity {
         if (!(user.isPresent() && user.get().getRole().equals(UserRole.ROLE_ADMIN)))
             throw new BadRequestException("Invalid admin token.");
     }
+    public static void realUserValidation(Optional<UserEntity> user) {
+        if (user.isEmpty())
+            throw new BadRequestException("Invalid user token.");
+    }
+
 }

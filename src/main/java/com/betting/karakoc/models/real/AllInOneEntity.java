@@ -12,7 +12,6 @@ public class AllInOneEntity {
     BetRoundEntity betRound;
     @NotNull @NotBlank @NotEmpty
     UserBetRoundEntity userBetRound;
-    @NotNull @NotBlank @NotEmpty
-    UserEntity user;
+
     String message;
 }
