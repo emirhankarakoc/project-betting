@@ -3,37 +3,35 @@ package com.betting.karakoc.service.interfaces;
 import com.betting.karakoc.models.dtos.BetRoundEntityDTO;
 import com.betting.karakoc.models.dtos.GameEntityDTO;
 import com.betting.karakoc.models.real.UserEntity;
-import com.betting.karakoc.models.requests.CreateBetRoundRequest;
-import com.betting.karakoc.models.requests.CreateGameRequest;
-import com.betting.karakoc.models.requests.PutGameRequest;
+import com.betting.karakoc.models.requests.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface AdminService {
-    Page<UserEntity> getAllUsers(int pageNumber);
+    Page<UserEntity> getAllUsers(GetAllUsersRequest request);
 
     BetRoundEntityDTO createBetRound(CreateBetRoundRequest request);
 
     GameEntityDTO createGame(CreateGameRequest request);
 
-    List<BetRoundEntityDTO> getCreatedBetRounds();
+    List<BetRoundEntityDTO> getCreatedBetRounds(GetCreatedBetRoundsRequest request);
 
-    GameEntityDTO putGame(Long betroundId, Long gameId, PutGameRequest request);
+    GameEntityDTO putGame(PutGameRequest request);
 
-    BetRoundEntityDTO endBetRound(Long betroundId);
+    BetRoundEntityDTO endBetRound(EndBetRoundRequest request);
 
 /*
     GameEntity changeGameModuleToTurtleGame(@NotNull Long gameId);
 */
 
 
-    void deleteBetRound(Long betroundId);
+    void deleteBetRound(DeleteBetRoundRequest request);
 
-    void deleteGame(Long betroundId, Long gameId);
+    void deleteGame(DeleteGameRequest request);
 
-    void deleteUserBetRound(Long betroundId, Long userbetroundId);
-     void deleteBet(Long betroundId, Long userbetroundId, String betId);
+    void deleteUserBetRound(DeleteUserBetRoundRequest request);
+     void deleteBet(DeleteBetRequest request);
 
 
     }

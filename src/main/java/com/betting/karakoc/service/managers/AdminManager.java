@@ -141,6 +141,8 @@ public class AdminManager implements AdminService {
         return gameToDto(game.get());
     }
 
+
+
 /*    public GameEntity changeGameModuleToTurtleGame(Long gameId) {
         Optional<GameEntity> game = gameRepository.findById(gameId);
         isGameEmpty(game);
@@ -163,13 +165,13 @@ public class AdminManager implements AdminService {
         List<UserBetRoundEntity> userbetrounds = userBetRoundRepository.findByBetRoundEntityId(request.getBetroundId());
         if (!userbetrounds.isEmpty()) {
             for (int i = 0; i < userbetrounds.size(); i++) {
-                deleteUserBetRound(request.getBetroundId(), userbetrounds.get(i).getId());
+                deleteUserBetRound(new DeleteUserBetRoundRequest(request.getBetroundId(), userbetrounds.get(i).getId(), request.getAdminToken()));
             }
         }
         List<GameEntity> games = gameRepository.findAllByBetroundId(request.getBetroundId());
         if (!games.isEmpty()) {
             for (int i = 0; i < games.size(); i++) {
-                deleteGame(request.getBetroundId(), games.get(i).getId());
+                deleteGame(new DeleteGameRequest(request.getBetroundId(), games.get(i).getId(), request.getAdminToken()));
                 betRound.get().getGames().remove(games.get(i));
             }
         }
@@ -194,7 +196,7 @@ public class AdminManager implements AdminService {
         List<UserBetEntity> allBetsForThisGame = userBetRepository.findAllByGameEntityId(request.getGameId());
         for (int i = 0; i < allBetsForThisGame.size(); i++) {
             UserBetEntity bet = allBetsForThisGame.get(i);
-            deleteBet(request.getBetroundId(), bet.getUserBetRoundId(), bet.getId());
+            deleteBet(new DeleteBetRequest(request.getBetroundId(), bet.getUserBetRoundId(), bet.getId(), request.getAdminToken()));
         }
         gameRepository.delete(game.get());
         betRoundRepository.save(betRound.get());
@@ -215,7 +217,7 @@ public class AdminManager implements AdminService {
         for (int i = 0; i < userBetRound.get().getUserBetList().size(); i++) {
             UserBetEntity bet = userBetRound.get().getUserBetList().get(i);
             isUserBetEmpty(Optional.ofNullable(bet));
-            deleteBet(request.getBetroundId(), request.getUserbetroundId(), bet.getId());
+            deleteBet(new DeleteBetRequest(request.getBetroundId(), request.getUserbetroundId(), bet.getId(), request.getAdminToken()));
             userBetRound.get().getUserBetList().remove(bet);
         }
         userBetRoundRepository.delete(userBetRound.get());
