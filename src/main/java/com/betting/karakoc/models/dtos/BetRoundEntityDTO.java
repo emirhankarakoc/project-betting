@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class BetRoundEntityDTO {
-    private Long id;
+    private String id;
     private LocalDate createdDateTime;
     private LocalDate updatedDateTime;
     private String title;

@@ -10,7 +10,7 @@ import lombok.Getter;
 public class DeleteBetRoundRequest {
 
     @NotBlank
-    private Long betroundId;
+    private String betroundId;
     @NotBlank
     private String adminToken;
 }

@@ -12,6 +12,7 @@ import lombok.Data;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class MailSenderManager implements MailSenderService {
 
     private final BetSummaryManager betSummaryManager;
 
+    @Transactional
     public String mailSenderByBetRoundId(MailSenderByBetRoundIdRequest request) {
         Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
         // If token is not admin's token, throw exception. if not, welcome. keep continue please
@@ -41,26 +43,31 @@ public class MailSenderManager implements MailSenderService {
         simpleMailMessage.setFrom("shopifyemirhan6@gmail.com");
         simpleMailMessage.setSubject("SPOR TOTO RESULT");
         StringBuilder response = new StringBuilder();
-        List<UserBetRoundEntity> betroundsWillClose = new ArrayList<>();
+
         List<UserBetRoundEntity> dummyList = userBetRoundRepository.findAllByBetRoundEntityId(request.getBetroundId());
-        List<UserEntity> mailAdamlar = new ArrayList<>();
+        List<UserBetRoundEntity> userBetroundsWillClose = new ArrayList<>();
+
         for (UserBetRoundEntity userBetRoundEntity : dummyList) {
             if (Objects.equals(userBetRoundEntity.getBetRoundEntityId(), request.getBetroundId()) && userBetRoundEntity.getUserBetList().size() == GAME_MAX_COUNT) {
-                betroundsWillClose.add(userBetRoundEntity);
+                userBetroundsWillClose.add(userBetRoundEntity);
             }
         }
-        for (UserBetRoundEntity userBetRound : betroundsWillClose) {
-            Optional<UserEntity> usersWillAdded = userRepository.findById(userBetRound.getUserEntityId());
-            if (!mailAdamlar.contains(usersWillAdded.get())) {
-                mailAdamlar.add(usersWillAdded.get());
+       // System.out.println(userBetroundsWillClose.get(0).getUserToken());
+
+
+        List<UserEntity> bettedUsersForThisBetround = new ArrayList<>();
+
+        for (UserBetRoundEntity userBetRound : userBetroundsWillClose) {
+            Optional<UserEntity> usersWillAdded = userRepository.findByToken(userBetRound.getUserToken());
+            if (!bettedUsersForThisBetround.contains(usersWillAdded.get())) {
+                bettedUsersForThisBetround.add(usersWillAdded.get());
             }
         }
-        for (UserBetRoundEntity userBetRound : betroundsWillClose) {
-            Optional<UserEntity> usersWillAdded = userRepository.findById(userBetRound.getUserEntityId());
+        for (UserBetRoundEntity userBetRound : userBetroundsWillClose) {
+            Optional<UserEntity> mailReceiver = userRepository.findByToken(userBetRound.getUserToken());
 
-
-            response.append(betSummaryManager.summary(new SummaryRequest(userBetRound.getId(), request.getAdminToken()))).append("\n");
-            simpleMailMessage.setTo(usersWillAdded.get().getUsername());
+            response.append(betSummaryManager.summary(userBetRound.getId())).append("\n");
+            simpleMailMessage.setTo(mailReceiver.get().getUsername());
             simpleMailMessage.setText(response.toString());
             try {
                 mailSender.send(simpleMailMessage);
@@ -69,7 +76,7 @@ public class MailSenderManager implements MailSenderService {
                 throw new BadRequestException("Bad internet connection. Try again later.");
             }
         }
-        return mailAdamlar.size() + " mail sent.";
+        return bettedUsersForThisBetround.size() + " mail sent.";
 
     }
 

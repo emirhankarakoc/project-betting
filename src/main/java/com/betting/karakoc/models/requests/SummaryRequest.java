@@ -8,7 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SummaryRequest {
     @NotBlank
-    private Long userBetRoundId;
-    @NotBlank
-    private String adminToken;
+    private String userBetRoundId;
 }

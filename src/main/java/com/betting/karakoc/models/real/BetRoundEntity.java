@@ -23,35 +23,21 @@ import static com.betting.karakoc.KarakocApplication.GAME_MAX_COUNT;
 @Data
 public class BetRoundEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @NotBlank
-    @NotEmpty
-    private Long id;
-    @NotNull
-    @NotBlank
-    @NotEmpty
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
     private LocalDate createdDateTime;
-    @NotNull
-    @NotBlank
-    @NotEmpty
+
     private LocalDate updatedDateTime;
-    @NotNull
-    @NotBlank
-    @NotEmpty
+
     private String title;
-    @NotNull
-    @NotBlank
-    @NotEmpty
+
     private LocalDate playDateTime;
     @Enumerated
-    @NotNull
-    @NotBlank
-    @NotEmpty
+
     private BetStatus betStatus;
     @OneToMany
     @JoinColumn(name = "betroundId")
-    @NotNull@NotBlank@NotEmpty
     private List<GameEntity> games;
 
 
@@ -121,5 +107,13 @@ public class BetRoundEntity {
         }
 
         return dto;
+    }
+    public static List<BetRoundEntityDTO> betroundsToDtos(List<BetRoundEntity> betrounds){
+        List<BetRoundEntityDTO> responseList = new ArrayList<>();
+
+        for (BetRoundEntity betround:betrounds) {
+            responseList.add(betroundToDto(betround));
+        }
+        return responseList;
     }
 }

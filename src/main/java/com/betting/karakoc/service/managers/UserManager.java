@@ -11,7 +11,6 @@ import com.betting.karakoc.models.real.*;
 import com.betting.karakoc.models.requests.*;
 import com.betting.karakoc.repository.*;
 import com.betting.karakoc.service.interfaces.UserService;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,7 +38,7 @@ import static com.betting.karakoc.models.real.UserEntity.*;
 
 public class UserManager implements UserService {
     private final UserEntityRepository userRepository;
-    private final BetRoundEntityRepository betRepository;
+    private final BetRoundEntityRepository betroundRepository;
     private final UserBetRoundRepository userBetRoundRepository;
     private final JavaMailSender mailSender;
     private final UserBetRepository userBetRepository;
@@ -51,14 +50,16 @@ public class UserManager implements UserService {
         // If token is not valid token, throw exception. if not, welcome. keep continue please
         realUserValidation(user);
 
-        List<BetRoundEntity> betrounds = betRepository.findAll();
-        List<BetRoundEntityDTO> responseList = new ArrayList<>();
-        for (BetRoundEntity betRound : betrounds) {
-            if (betRound.getBetStatus() == BetStatus.PLANNED) {
-                responseList.add(betroundToDto(betRound));
-            }
-        }
-        return responseList;
+//        List<BetRoundEntity> betrounds = betRepository.findAll();
+//        List<BetRoundEntityDTO> responseList = new ArrayList<>();
+//        for (BetRoundEntity betRound : betrounds) {
+//            if (betRound.getBetStatus() == BetStatus.PLANNED) {
+//                responseList.add(betroundToDto(betRound));
+//            }
+//        }
+
+        List<BetRoundEntity> plannedBetrounds = betroundRepository.findAllByBetStatus(BetStatus.PLANNED);
+        return betroundsToDtos(plannedBetrounds);
     }
 
 
@@ -67,26 +68,28 @@ public class UserManager implements UserService {
         // If token is not valid token, throw exception. if not, welcome. keep continue please
         realUserValidation(user);
 
-        List<BetRoundEntity> betrounds = betRepository.findAll();
-        List<BetRoundEntityDTO> responseList = new ArrayList<>();
-        for (BetRoundEntity betRound : betrounds) {
-            if (betRound.getBetStatus() == BetStatus.ENDED) {
-                responseList.add(betroundToDto(betRound));
-            }
-        }
-        return responseList;
+//        List<BetRoundEntity> betrounds = betRepository.findAll();
+//        List<BetRoundEntityDTO> responseList = new ArrayList<>();
+//        for (BetRoundEntity betRound : betrounds) {
+//            if (betRound.getBetStatus() == BetStatus.ENDED) {
+//                responseList.add(betroundToDto(betRound));
+//            }
+//        }
+        List<BetRoundEntity> endedBetrounds = betroundRepository.findAllByBetStatus(BetStatus.ENDED);
+        return betroundsToDtos(endedBetrounds);
+
 
     }
-
+@Transactional
     public UserBetRoundEntityDTO createUserBetRound(CreateUserBetRoundRequest request) {
         Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
         // If token is not valid token, throw exception. if not, welcome. keep continue please
         realUserValidation(user);
 
-        Optional<BetRoundEntity> kontrol = betRepository.findById(request.getBetRoundEntityId());
-        isBetRoundEmpty(kontrol);
-        isBetRoundsGameIsNotXX(kontrol.get());
-        isBetroundStatusCreatedOrEnded(kontrol.get());
+        Optional<BetRoundEntity> betround = betroundRepository.findById(request.getBetRoundEntityId());
+        isBetRoundEmpty(betround);
+        isBetRoundsGameIsNotXX(betround.get());
+        isBetroundStatusCreatedOrEnded(betround.get());
 
         UserBetRoundEntity userbet = userBetRoundRepository.save(createUserbetRound(request.getBetRoundEntityId(), userRepository.findByToken(request.getUserToken()).get() ));
         return userBetRoundToDto(userbet);
@@ -99,20 +102,20 @@ public class UserManager implements UserService {
         // If token is not valid token, throw exception. if not, welcome. keep continue please
         realUserValidation(user);
 
-
         // Actually I don't want this but I have to... for you...
-         Long betRoundId = request.getBetRoundId();
-         Long userBetRoundId = request.getUserBetRoundId();
-         Long gameId = request.getGameId();
-         Long betTeamId = request.getBetTeamId();
+        String betRoundId = request.getBetRoundId();
+        String userBetRoundId = request.getUserBetRoundId();
+        String gameId = request.getGameId();
+         int betTeamId = request.getBetTeamId();
 
 
-        Optional<BetRoundEntity> betRoundEntity = betRepository.findById(betRoundId);
+        Optional<BetRoundEntity> betRoundEntity = betroundRepository.findById(betRoundId);
         isBetRoundEmpty(betRoundEntity);
         isBetroundStatusCreatedOrEnded(betRoundEntity.get());
 
         Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findById(userBetRoundId);
         isUserBetRoundEmpty(userbetround);
+        if (!Objects.equals(userbetround.get().getUserToken(), request.getUserToken())) throw new BadRequestException("You are not this userbetround owner.");
 
         Optional<GameEntity> game = gameRepository.findById(gameId);
         isGameEmpty(game);
@@ -126,9 +129,9 @@ public class UserManager implements UserService {
 
 
         List<UserBetEntity> userBetlistesi = userbetround.get().getUserBetList();
-        List<UserBetEntity> yeniListe = new ArrayList<>();
+        List<UserBetEntity> newUserBetList = new ArrayList<>();
         for (UserBetEntity bet : userBetlistesi) {
-            if (bet.getGameEntityId().equals(gameId)) yeniListe.add(bet);
+            if (bet.getGameEntityId().equals(gameId)) newUserBetList.add(bet);
         }
 
         Optional<UserBetEntity> userBetControl = userBetRepository.findByGameEntityIdAndUserBetRoundId(gameId, userBetRoundId);
@@ -143,19 +146,19 @@ public class UserManager implements UserService {
         userBetRoundRepository.save(userbetround.get());
         //dtolama
         UserBetEntityDTO dto = userBetToDto(userBet);
-        StringBuilder oynayanTakimlar = new StringBuilder();
+        StringBuilder playerTeams = new StringBuilder();
         for (int i = 0; i < game.get().getTeams().size(); i++) {
-            oynayanTakimlar.append(game.get().getTeams().get(i).getName()).append("-");
+            playerTeams.append(game.get().getTeams().get(i).getName()).append("-");
         }
-        dto.setTeams(oynayanTakimlar.toString() + ", Oynadiginiz takim : " + teamRepository.findById(betTeamId).get().getName());
+        dto.setTeams(playerTeams.toString() + ", Your bet : " + teamRepository.findById(betTeamId).get().getName());
         return dto;
 
 
     }
 
 
-    public BetRoundEntityDTO getBetroundById( Long id) {
-        Optional<BetRoundEntity> betRound = betRepository.findById(id);
+    public BetRoundEntityDTO getBetroundById( String id) {
+        Optional<BetRoundEntity> betRound = betroundRepository.findById(id);
         isBetRoundEmpty(betRound);
         return betroundToDto(betRound.get());
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DeleteUserBetRoundRequest {
 
-    @NotBlank private Long betroundId;
-    @NotBlank private Long userbetroundId;
+    @NotBlank private String betroundId;
+    @NotBlank private String userbetroundId;
     @NotBlank private String adminToken;
 }

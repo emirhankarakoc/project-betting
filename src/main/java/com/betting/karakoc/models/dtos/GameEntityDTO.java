@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class GameEntityDTO {
-    private Long id;
-    private Long betRoundId;
+    private String id;
+    private String betRoundId;
     private List<Team> teams = new ArrayList<>();
 }

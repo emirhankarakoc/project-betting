@@ -9,9 +9,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetAllBetsByGameRequest {
     @NotBlank
-    private long userbetRoundId;
+    private String userbetRoundId;
     @NotBlank
-    private long betroundId;
+    private String betroundId;
     @NotBlank
     private String adminToken;
 }

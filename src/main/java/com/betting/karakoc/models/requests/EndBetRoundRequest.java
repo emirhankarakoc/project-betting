@@ -1,12 +1,15 @@
 package com.betting.karakoc.models.requests;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
+@Builder
 public class EndBetRoundRequest {
     @NotBlank
-    private Long betroundId;
+    private String betroundId;
     @NotBlank
     private String adminToken;
 }

@@ -7,12 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class KarakocApplicationTests {
+public class KarakocApplicationTests {
 
-    @Test
-    void merhaba() {
-        String selamla = "Selamlar sayin kullanici.";
-        assertEquals("Selamlar sayin kullanici.", selamla);
-    }
-
+public static String API_URL = "http://localhost:8080";
 }

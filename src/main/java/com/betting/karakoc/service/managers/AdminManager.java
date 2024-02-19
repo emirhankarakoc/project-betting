@@ -46,14 +46,14 @@ public class AdminManager implements AdminService {
     private final UserBetRepository userBetRepository;
 
     @Transactional
-    public GameEntityDTO createGame(CreateGameRequest request) {
+    public GameEntityDTO createGame(CreateGameRequest request) throws InterruptedException {
         Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
         // If token is not admin's token, throw exception. if not, welcome. keep continue please
         onlyAdminValidation(user);
 
 
         Optional<BetRoundEntity> betRound = betRoundRepository.findById(request.getBetroundId());
-        isEmpty(betRound);
+        isBetRoundEmpty(betRound);
 
         //if betround's gamesize lower than GAME_MAX_COUNT; add game. if not throw exception.
         //don't change the second param. its locked.!.!.!
@@ -96,14 +96,19 @@ public class AdminManager implements AdminService {
         // If token is not admin's token, throw exception. if not, welcome. keep continue please
         onlyAdminValidation(user);
 
-        List<BetRoundEntity> betrounds = betRoundRepository.findAll();
-        List<BetRoundEntityDTO> responseList = new ArrayList<>();
-        for (BetRoundEntity betRound : betrounds) {
-            if (betRound.getBetStatus() == BetStatus.CREATED) {
-                responseList.add(betroundToDto(betRound));
-            }
-        }
-        return responseList;
+//        List<BetRoundEntity> betrounds = betRoundRepository.findAll();
+//        List<BetRoundEntityDTO> responseList = new ArrayList<>();
+//        for (BetRoundEntity betRound : betrounds) {
+//            if (betRound.getBetStatus() == BetStatus.CREATED) {
+//                responseList.add(betroundToDto(betRound));
+//            }
+//        }
+//        return responseList;
+
+
+        List<BetRoundEntity> createdBetRounds = betRoundRepository.findAllByBetStatus(BetStatus.CREATED);
+
+        return betroundsToDtos(createdBetRounds);
     }
 
 
@@ -162,7 +167,7 @@ public class AdminManager implements AdminService {
 
         Optional<BetRoundEntity> betRound = betRoundRepository.findById(request.getBetroundId());
         isBetRoundEmpty(betRound);
-        List<UserBetRoundEntity> userbetrounds = userBetRoundRepository.findByBetRoundEntityId(request.getBetroundId());
+        List<UserBetRoundEntity> userbetrounds = userBetRoundRepository.findAllByBetRoundEntityId(request.getBetroundId());
         if (!userbetrounds.isEmpty()) {
             for (int i = 0; i < userbetrounds.size(); i++) {
                 deleteUserBetRound(new DeleteUserBetRoundRequest(request.getBetroundId(), userbetrounds.get(i).getId(), request.getAdminToken()));

@@ -21,7 +21,9 @@ import static com.betting.karakoc.models.real.BetRoundEntity.isBetroundEnded;
 import static com.betting.karakoc.models.real.GameEntity.summaryGameResult;
 import static com.betting.karakoc.models.real.UserBetEntity.userBetToDto;
 import static com.betting.karakoc.models.real.UserBetEntity.userBetValidation;
+import static com.betting.karakoc.models.real.UserBetRoundEntity.isUserBetRoundEmpty;
 import static com.betting.karakoc.models.real.UserBetRoundEntity.isUserBetRoundEmptyAndisUserPlayedForThisBetround;
+import static com.betting.karakoc.models.real.UserEntity.isEmpty;
 import static com.betting.karakoc.models.real.UserEntity.onlyAdminValidation;
 
 
@@ -92,26 +94,27 @@ public class BetSummaryManager implements BetSummaryService {
         return all.getMesaj();
     }*/
 
-    public String summary(SummaryRequest request) {
-        Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
-        // If token is not admin's token, throw exception. if not, welcome. keep continue please
-        onlyAdminValidation(user);
-        Optional<UserBetRoundEntity> userbetround = userBetRoundRepository.findByIdAndUserEntityId(request.getUserBetRoundId(), user.get().getId());
-        isUserBetRoundEmptyAndisUserPlayedForThisBetround(userbetround, user.get());
-        Optional<BetRoundEntity> betround = betRepository.findById(userbetround.get().getBetRoundEntityId());
+    public String summary(String userBetRoundId) {
+
+
+        Optional<UserBetRoundEntity> userBetRoundEntity = userBetRoundRepository.findById(userBetRoundId);
+        isUserBetRoundEmpty(userBetRoundEntity);
+
+        Optional<BetRoundEntity> betround = betRepository.findById(userBetRoundEntity.get().getBetRoundEntityId());
         isBetRoundEmpty(betround);
         isBetroundEnded(betround);
-        List<UserBetEntity> userbet = userBetRepository.findAllByUserBetRoundId(userbetround.get().getId());
+
+        List<UserBetEntity> userbet = userBetRepository.findAllByUserBetRoundId(userBetRoundEntity.get().getId());
         userBetValidation(userbet);
         int correctCounter = 0;
         for (int i = 0; i < GAME_MAX_COUNT; i++) {
-            correctCounter += summaryGameResult(betround.get().getGames().get(i), userbetround.get());
+            correctCounter += summaryGameResult(betround.get().getGames().get(i), userBetRoundEntity.get());
         }
         AllInOneEntity all = new AllInOneEntity();
         all.setBetRound(betround.get());
-        all.setUserBetRound(userbetround.get());
+        all.setUserBetRound(userBetRoundEntity.get());
         all.getUserBetRound().setCorrectGuessedMatchCount(correctCounter);
-        all.setMessage("You know "+all.getUserBetRound().getCorrectGuessedMatchCount()+" of "+all.getUserBetRound().getUserBetList().size() +"games.");
+        all.setMessage("You know "+all.getUserBetRound().getCorrectGuessedMatchCount()+" of "+all.getUserBetRound().getUserBetList().size() +" games. \n CONGRATILATIONS...");
         return all.getMessage();
 
     }

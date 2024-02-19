@@ -9,6 +9,7 @@ import com.betting.karakoc.service.interfaces.MailSenderService;
 import com.betting.karakoc.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
 
 public class AccountController {
+
     private final AccountService accountService;
     private final UserService userService;
     private final MailSenderService mailSenderService;
@@ -30,7 +32,7 @@ public class AccountController {
             summary = "REGISTER")
     @PostMapping("/register")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public UserEntityDTO register(@RequestBody CreateUserRequest request) {
+    public UserEntityDTO register(@Valid @RequestBody CreateUserRequest request) {
         return accountService.register(request);
     }
 
