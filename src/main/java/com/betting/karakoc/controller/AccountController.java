@@ -31,7 +31,7 @@ public class AccountController {
     @Operation(
             summary = "REGISTER")
     @PostMapping("/register")
-    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/swagger-ui/index.html/***")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public UserEntityDTO register(@Valid @RequestBody CreateUserRequest request) {
         return accountService.register(request);
     }
@@ -39,7 +39,7 @@ public class AccountController {
     @Operation(
             summary = "LOGIN")
     @PostMapping("/login")
-    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/swagger-ui/index.html/***")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public String login(@RequestBody LoginRequest request) {
         return accountService.login(request.getUsername(), request.getPassword());
 
