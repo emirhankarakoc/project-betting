@@ -12,4 +12,7 @@ public interface BetRoundEntityRepository extends JpaRepository<BetRoundEntity, 
     Optional<BetRoundEntity> findById(String id);
     List<BetRoundEntity> findAllByBetStatus(BetStatus betStatus);
 
+
+    List<BetRoundEntity> findAllByCreatorCode(int creatorCode);
+
 }

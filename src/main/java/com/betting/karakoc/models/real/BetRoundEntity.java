@@ -40,6 +40,8 @@ public class BetRoundEntity {
     @JoinColumn(name = "betroundId")
     private List<GameEntity> games;
 
+    private int creatorCode;
+
 
     public static void isBetRoundEmpty(Optional<BetRoundEntity> betround) {
         if (betround.isEmpty())

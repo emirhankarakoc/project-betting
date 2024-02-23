@@ -2,6 +2,7 @@ package com.betting.karakoc.controller;
 
 import com.betting.karakoc.models.dtos.UserEntityDTO;
 import com.betting.karakoc.models.requests.ChangePasswordRequest;
+import com.betting.karakoc.models.requests.CreateManagerRequest;
 import com.betting.karakoc.models.requests.CreateUserRequest;
 import com.betting.karakoc.models.requests.LoginRequest;
 import com.betting.karakoc.service.interfaces.AccountService;
@@ -30,10 +31,18 @@ public class AccountController {
 
     @Operation(
             summary = "REGISTER")
-    @PostMapping("/register")
+    @PostMapping("/registerUser")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
-    public UserEntityDTO register(@Valid @RequestBody CreateUserRequest request) {
-        return accountService.register(request);
+    public UserEntityDTO register1(@Valid @RequestBody CreateUserRequest request) {
+        return accountService.register1(request);
+    }
+
+    @Operation(
+            summary = "REGISTER")
+    @PostMapping("/registerManager")
+    @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
+    public UserEntityDTO register2(@Valid @RequestBody CreateManagerRequest request) {
+        return accountService.register2(request);
     }
 
     @Operation(

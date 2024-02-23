@@ -21,6 +21,7 @@ public class GameEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String betroundId;
+    private int creatorCode;
 
     @OneToMany
     @JoinColumn(name = "teamId")

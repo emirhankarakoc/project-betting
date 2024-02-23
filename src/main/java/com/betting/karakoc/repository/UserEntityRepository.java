@@ -16,5 +16,7 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, String> 
 
     Optional<UserEntity> findByToken(String token);
 
+    Optional<UserEntity> findByCreatorToken(String creatorToken);
 
+    Optional<UserEntity> findByCreatorCode(int creatorCode);
 }

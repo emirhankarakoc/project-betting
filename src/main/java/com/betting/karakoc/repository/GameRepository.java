@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<GameEntity, String> {
     List<GameEntity> findAllByBetroundId(String betroundId);
+    List<GameEntity> findAllByBetroundIdAndCreatorCode(String betroundId,int creatorCode);
 }

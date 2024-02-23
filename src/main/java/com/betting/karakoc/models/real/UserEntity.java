@@ -5,6 +5,7 @@ import com.betting.karakoc.exceptions.general.BadRequestException;
 import com.betting.karakoc.exceptions.general.NotfoundException;
 import com.betting.karakoc.models.dtos.UserEntityDTO;
 import com.betting.karakoc.models.enums.UserRole;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
@@ -33,6 +34,10 @@ public class UserEntity {
     @Enumerated
     private UserRole role;
     private String token;
+
+
+    @Nullable
+    private int creatorCode;
 
 
     // We don't set password here. Because we use passwordCrypter().
