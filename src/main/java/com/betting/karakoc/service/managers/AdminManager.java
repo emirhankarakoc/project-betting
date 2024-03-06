@@ -95,17 +95,6 @@ public class AdminManager implements AdminService {
         Optional<UserEntity> user = userRepository.findByToken(request.getAdminToken());
         // If token is not admin's token, throw exception. if not, welcome. keep continue please
         onlyAdminValidation(user);
-
-//        List<BetRoundEntity> betrounds = betRoundRepository.findAll();
-//        List<BetRoundEntityDTO> responseList = new ArrayList<>();
-//        for (BetRoundEntity betRound : betrounds) {
-//            if (betRound.getBetStatus() == BetStatus.CREATED) {
-//                responseList.add(betroundToDto(betRound));
-//            }
-//        }
-//        return responseList;
-
-
         List<BetRoundEntity> createdBetRounds = betRoundRepository.findAllByBetStatus(BetStatus.CREATED);
 
         return betroundsToDtos(createdBetRounds);

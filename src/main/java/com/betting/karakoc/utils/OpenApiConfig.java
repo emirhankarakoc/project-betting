@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 description = "betting",
                 title = "Betting  -  KARAKOC",
-                version = "1.2.3.4.5.6.7.8.9.10"),
+                version = "1.2.3.4.5.6.7.8.9.ALEX,11.12.13.14.15...sonsuzluga"),
         servers = {
                 @Server(
                         description = "CLOUD ENV",

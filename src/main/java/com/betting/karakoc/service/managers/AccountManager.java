@@ -4,6 +4,7 @@ import com.betting.karakoc.exceptions.general.BadRequestException;
 import com.betting.karakoc.models.dtos.UserEntityDTO;
 import com.betting.karakoc.models.enums.UserRole;
 import com.betting.karakoc.models.real.UserEntity;
+import com.betting.karakoc.models.requests.CreateManagerRequest;
 import com.betting.karakoc.models.requests.CreateUserRequest;
 import com.betting.karakoc.repository.UserEntityRepository;
 import com.betting.karakoc.service.interfaces.AccountService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import static com.betting.karakoc.models.real.UserEntity.*;
@@ -28,13 +30,49 @@ public class AccountManager implements AccountService {
             throw new BadRequestException("This mail is already taken.");
         validateUsername(request.getUsername());
         if (repository.findAll().isEmpty()) {
-            UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), "KARAKOC", "KARAKOC", "ADMIN", "1", UserRole.ROLE_ADMIN, "1");
+            UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), "KARAKOC", "KARAKOC", "ADMIN", "1", UserRole.ROLE_ADMIN, "1",001);
             repository.save(user);
-            UserEntity user2 = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), "KARAKOC", "KARAKOC", "USER", "1", UserRole.ROLE_USER, "2");
+            UserEntity user2 = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), "KARAKOC", "KARAKOC", "USER", "1", UserRole.ROLE_USER, "2",000);
             repository.save(user2);
         }
-        UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), request.getFirstname(), request.getLastname(), request.getUsername(), passwordCrypter(request.getPassword()), UserRole.ROLE_USER, UUID.randomUUID().toString());
+        UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), request.getFirstname(), request.getLastname(), request.getUsername(), passwordCrypter(request.getPassword()), UserRole.ROLE_USER, UUID.randomUUID().toString(),001);
         repository.save(user);
+        UserEntityDTO response = userToDto(user);
+        response.setPassword(request.getPassword());
+        response.setMessage("Your account is created successfully. Welcome MR/MRS. " + user.getFirstname());
+        response.setToken(user.getToken());
+        return response;
+    }
+    public UserEntityDTO registerAsManager(CreateManagerRequest request) {
+
+        if (repository.existsByUsername(request.getUsername()))
+            throw new BadRequestException("This mail is already taken.");
+        validateUsername(request.getUsername());
+        Random random = new Random();
+        int creatorCode = random.nextInt();
+        if (repository.existsByCreatorCode(creatorCode)) {
+            //if someone has this creatorcode.
+            registerAsManager(request);
+            //recursive
+        }
+        UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), request.getFirstname(), request.getLastname(), request.getUsername(), passwordCrypter(request.getPassword()), UserRole.ROLE_ADMIN, UUID.randomUUID().toString(),creatorCode);
+        repository.save(user);
+        UserEntityDTO response = userToDto(user);
+        response.setPassword(request.getPassword());
+        response.setMessage("Your account is created successfully. Welcome MR/MRS. " + user.getFirstname());
+        response.setToken(user.getToken());
+        return response;
+    }
+    public UserEntityDTO registerAsUser(CreateUserRequest request) {
+        if (!repository.existsByCreatorCode(request.getCreatorCode())){
+            throw new BadRequestException("Invalid creator code.");
+        }
+        if (repository.existsByUsername(request.getUsername()))
+            throw new BadRequestException("This mail is already taken.");
+        validateUsername(request.getUsername());
+        UserEntity user = new UserEntity(UUID.randomUUID().toString(), LocalDate.now(), LocalDate.now(), request.getFirstname(), request.getLastname(), request.getUsername(), passwordCrypter(request.getPassword()), UserRole.ROLE_USER, UUID.randomUUID().toString(),request.getCreatorCode());
+        repository.save(user);
+
         UserEntityDTO response = userToDto(user);
         response.setPassword(request.getPassword());
         response.setMessage("Your account is created successfully. Welcome MR/MRS. " + user.getFirstname());

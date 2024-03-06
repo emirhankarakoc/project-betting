@@ -5,5 +5,5 @@ import lombok.Getter;
 
 @Getter
 public class GetPlannedBetRoundsRequest {
-    @NotBlank private String userToken;
+    @NotBlank int creatorCode;
 }

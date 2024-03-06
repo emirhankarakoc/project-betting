@@ -10,11 +10,14 @@
 </div>
 <script>
 
-    fetch("https://bettting.ey.r.appspot.com/account/register", {
+    fetch("http://localhost:8080/account/register", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            // Gönderen origini belirt
+            "Origin": "http://localhost:8080"
         },
+
         body: JSON.stringify({
             "firstname": "string",
             "lastname": "string",

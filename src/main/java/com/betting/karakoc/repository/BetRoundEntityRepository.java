@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface BetRoundEntityRepository extends JpaRepository<BetRoundEntity, String> {
 
     Optional<BetRoundEntity> findById(String id);
-    List<BetRoundEntity> findAllByBetStatus(BetStatus betStatus);
+    List<BetRoundEntity> findAllByBetStatusAndOwnerToken(BetStatus betStatus,int creatorCode);
+    List<BetRoundEntity> findAllByBetStatus (BetStatus betStatus );
 
 }

@@ -79,7 +79,7 @@ public class BetroundController {
     @GetMapping("/getBetrounds/filter/planned")
     @CrossOrigin(origins = "https://bettting.ey.r.appspot.com/")
     public List<BetRoundEntityDTO> getPlannedBetRounds(@RequestBody GetPlannedBetRoundsRequest request) {
-        return userService.getPlannedBetRounds(request);
+        return userService.getPlannedBetRoundsWithCreatorCode(request);
     }
 
     @Operation(

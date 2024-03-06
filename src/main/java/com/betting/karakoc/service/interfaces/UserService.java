@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
     List<BetRoundEntityDTO> getEndedBetRounds(GetEndedBetRoundsRequest request);
 
-    List<BetRoundEntityDTO> getPlannedBetRounds(GetPlannedBetRoundsRequest request);
+    List<BetRoundEntityDTO> getPlannedBetRoundsWithCreatorCode(GetPlannedBetRoundsRequest request);
 
     UserBetRoundEntityDTO createUserBetRound(CreateUserBetRoundRequest request);
 

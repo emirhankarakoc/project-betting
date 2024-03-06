@@ -45,40 +45,33 @@ public class UserManager implements UserService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
 
-    public List<BetRoundEntityDTO> getPlannedBetRounds(GetPlannedBetRoundsRequest request) {
-        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
-        // If token is not valid token, throw exception. if not, welcome. keep continue please
+    public List<BetRoundEntityDTO> getPlannedBetRoundsWithCreatorCode(GetPlannedBetRoundsRequest request) {
+        if (!userRepository.existsByCreatorCode(request.getCreatorCode())){
+            throw new BadRequestException("Invalid creator code.");
+        }
+
+        Optional<UserEntity> user = userRepository.findByCreatorCode(request.getCreatorCode());
+        // If creatorCode is not valid code, throw exception. if not, welcome. keep continue please
         realUserValidation(user);
 
-//        List<BetRoundEntity> betrounds = betRepository.findAll();
-//        List<BetRoundEntityDTO> responseList = new ArrayList<>();
-//        for (BetRoundEntity betRound : betrounds) {
-//            if (betRound.getBetStatus() == BetStatus.PLANNED) {
-//                responseList.add(betroundToDto(betRound));
-//            }
-//        }
 
-        List<BetRoundEntity> plannedBetrounds = betroundRepository.findAllByBetStatus(BetStatus.PLANNED);
-        return betroundsToDtos(plannedBetrounds);
+        List<BetRoundEntity> plannedBetroundsFromRequestedUser = betroundRepository.findAllByBetStatusAndOwnerToken(BetStatus.PLANNED,user.get().getCreatorCode());
+        return betroundsToDtos(plannedBetroundsFromRequestedUser);
     }
 
 
     public List<BetRoundEntityDTO> getEndedBetRounds(GetEndedBetRoundsRequest request) {
-        Optional<UserEntity> user = userRepository.findByToken(request.getUserToken());
-        // If token is not valid token, throw exception. if not, welcome. keep continue please
+        if (!userRepository.existsByCreatorCode(request.getCreatorCode())){
+            throw new BadRequestException("Invalid creator code.");
+        }
+
+        Optional<UserEntity> user = userRepository.findByCreatorCode(request.getCreatorCode());
+        // If creatorCode is not valid code, throw exception. if not, welcome. keep continue please
         realUserValidation(user);
 
-//        List<BetRoundEntity> betrounds = betRepository.findAll();
-//        List<BetRoundEntityDTO> responseList = new ArrayList<>();
-//        for (BetRoundEntity betRound : betrounds) {
-//            if (betRound.getBetStatus() == BetStatus.ENDED) {
-//                responseList.add(betroundToDto(betRound));
-//            }
-//        }
-        List<BetRoundEntity> endedBetrounds = betroundRepository.findAllByBetStatus(BetStatus.ENDED);
-        return betroundsToDtos(endedBetrounds);
 
-
+        List<BetRoundEntity> plannedBetroundsFromRequestedUser = betroundRepository.findAllByBetStatusAndOwnerToken(BetStatus.ENDED,user.get().getCreatorCode());
+        return betroundsToDtos(plannedBetroundsFromRequestedUser);
     }
 @Transactional
     public UserBetRoundEntityDTO createUserBetRound(CreateUserBetRoundRequest request) {

@@ -15,6 +15,8 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, String> 
     boolean existsByUsername(String username);
 
     Optional<UserEntity> findByToken(String token);
+    Optional<UserEntity> findByCreatorCode(int creatorCode);
+    boolean existsByCreatorCode(int creatorCode);
 
 
 }

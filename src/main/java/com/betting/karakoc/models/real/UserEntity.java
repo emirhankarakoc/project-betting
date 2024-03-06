@@ -33,6 +33,7 @@ public class UserEntity {
     @Enumerated
     private UserRole role;
     private String token;
+    private int creatorCode;
 
 
     // We don't set password here. Because we use passwordCrypter().

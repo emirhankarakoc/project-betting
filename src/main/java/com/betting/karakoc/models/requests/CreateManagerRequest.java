@@ -1,5 +1,6 @@
 package com.betting.karakoc.models.requests;
 
+
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CreateUserRequest {
+public class CreateManagerRequest {
     @NotBlank(message = "must be entered")
     String firstname;
     @NotBlank(message = "must be entered")
@@ -20,8 +21,6 @@ public class CreateUserRequest {
     String password;
     @NotBlank(message = "Repeat passsword must be entered")
     String repeatPassword;
-
-    int creatorCode;
 
     @AssertTrue(message = "Passwords must match")
     private boolean isPasswordMatching() {
