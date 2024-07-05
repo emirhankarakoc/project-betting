@@ -1,6 +1,5 @@
-BAYKAR 2024 YAZ stajı için  projeyi ekstra revizeledim. readme'yi de revizelenmiş haline göre değiştiriyorum..
-I updated thıs project for 2024 summer internship at BAYKAR. and changing readme again.
-
+Tanıtım videosu: https://www.youtube.com/watch?v=CNWLksVEIfY&list=PL9ijKSNIEZlHrfgPVZc7eHkK2j9OpBncT&index=15
+<br/>
 All in one.
 ![image](https://github.com/emirhankarakoc/betting/assets/101813995/d3c1b84e-fde4-49fc-bc56-6469b187d1c7)
 <!--emirhanenginner -->
