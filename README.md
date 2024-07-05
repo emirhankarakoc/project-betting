@@ -8,7 +8,6 @@ All in one.
 
 This project is a replica of the backend of the Spor Toto module.<br/>
 [You can check the live version here.](https://www.nesine.com/sportoto)<br/>
-[Also check deployed version with swagger.](https://bettting.ey.r.appspot.com/swagger-ui/index.html#/)
 </br>
 
 I started to change admin-user betting TO admin- team managers - team members (like kahoot) + UI like fat princess theme ( old ps3 game. )<br/>
@@ -55,7 +54,6 @@ emirhan karakoç<br/>
 
 Bu proje , Spor Toto modülünün backendinin kopyasıdır.<br/>
 [Bu linkten çalışan haline göz atabilirsiniz.](https://www.nesine.com/sportoto)<br/>
-[Deploylanmış ve çalışan hali](https://bettting.ey.r.appspot.com/swagger-ui/index.html#/)
 
 Projeyi çalıştırmak için MYSQL8'e ve Mail gönderimi için özel bir key'e ihtiyacınız var.<br/>
 MYSQL8'i buradan indirebilirsiniz: https://dev.mysql.com/downloads/workbench/   (Ayrıca workbench'e de ihtiyacınız
