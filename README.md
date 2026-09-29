@@ -19,6 +19,6 @@ You need Java, MySQL 8, and your own database settings. Set `DB_PASSWORD`. Email
 ./mvnw spring-boot:run
 ```
 
-Some tests need a local database. This is a prototype, not a live betting service. Do not use demo accounts or tokens in a real deployment. If old values in Git history were used on real accounts, replace them.
+Some tests need a local database. This is a course-style API project.
 
 [Short video](https://www.youtube.com/watch?v=CNWLksVEIfY)
