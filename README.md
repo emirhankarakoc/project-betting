@@ -19,6 +19,5 @@ You need Java, MySQL 8, and your own database settings. Set `DB_PASSWORD`. Email
 ./mvnw spring-boot:run
 ```
 
-Some tests need a local database. This is a course-style API project.
 
 [Short video](https://www.youtube.com/watch?v=CNWLksVEIfY)
