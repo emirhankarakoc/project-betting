@@ -1,24 +1,24 @@
-# Sports Prediction Backend Prototype
+# Sports Prediction API
 
-A Spring Boot API for creating prediction rounds, adding matches, recording user predictions, closing a round, entering results, and notifying participants by email.
+This Spring Boot app lets users predict match results. An admin creates a round, adds games, closes the round, and enters the real scores. The app checks the predictions and can send email updates.
 
-## Workflow
-1. An admin creates a round and adds games.
-2. Users register and submit predictions for games in the round.
-3. The admin closes predictions and records match results.
-4. The application calculates outcomes and can send notifications.
+## What to read
 
-The code includes account and scenario tests under `src/test`. It was built as a backend learning project; it does not process real-money wagers.
+- The account, round, game, and prediction code is in `src/main/java/`.
+- Tests are in `src/test/`.
+- Example flows are in [testScenarios.md](testScenarios.md).
+
+This is a learning project. It does not take real-money bets.
 
 ## Run locally
-Install Java and MySQL 8. Configure your own datasource and provide `DB_PASSWORD`. Email delivery requires your own SMTP account and `MAIL_PASSWORD`; you can inspect core round/prediction flows without presenting email delivery as active.
+
+You need Java, MySQL 8, and your own database settings. Set `DB_PASSWORD`. Email needs your own SMTP account and `MAIL_PASSWORD`.
 
 ```bash
 ./mvnw test
 ./mvnw spring-boot:run
 ```
 
-See `testScenarios.md` for example flows. An introduction video is at https://www.youtube.com/watch?v=CNWLksVEIfY.
+Some tests need a local database. This is a prototype, not a live betting service. Do not use demo accounts or tokens in a real deployment. If old values in Git history were used on real accounts, replace them.
 
-## Status
-A prototype, not a production betting service. Do not reuse demonstration users or tokens as authorization controls. Values previously committed to Git history must be rotated if they belonged to active accounts.
+[Short video](https://www.youtube.com/watch?v=CNWLksVEIfY)
